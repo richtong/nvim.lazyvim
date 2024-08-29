@@ -11,7 +11,7 @@ return {
   -- top search hit for a neovim lua solarized doesn't work
   { "craftzdog/solarized-osaka.nvim" },
   { "maxmx03/solarized.nvim" },
-  { "b0o/SchemaStore.nvim" }, -- yaml and json standard schemas
+  -- { "b0o/SchemaStore.nvim" }, -- yaml and json standard schemas
 
   -- Configure LazyVim to load colorscheme
   {
@@ -97,6 +97,7 @@ return {
     ---@class PluginLspOpts
     opts = {
       ---@type lspconfig.options
+      -- most of these are in LazyExtra
       servers = {
         -- tsserver will be automatically installed with mason and loaded with lspconfig
         -- the defaults are pyright for python, json, lua and json
@@ -104,20 +105,38 @@ return {
         -- look in for the string in the middle of the require('lspconfig.helm_ls.setup()')
         tsserver = {}, -- typescript
         -- marksman = { mason = false, autostart = false }, -- if you only want ltex
-        marksman = {}, -- markdown when ltex loaded both are checking
+        -- marksman = {}, -- markdown when ltex loaded both are checking
         bashls = {}, -- bash
-        dockerls = {}, -- dockerfiles
+        -- dockerls = {}, -- dockerfiles
         docker_compose_language_service = {}, -- docker compose yaml
         dotls = {}, -- graphviz .dot files
-        gopls = {}, -- Google's golang
-        helm_ls = {}, -- K8s helm files
+        -- gopls = {}, -- Google's golang
+        -- helm_ls = {}, -- K8s helm files
         jqls = {}, -- the crazy jq json query language
-        ltex = {}, -- Latex and markdown
+        ltex = { -- ltex do not use for "markdown" too noisy
+          filetypes = {
+            "bib",
+            "gitcommit",
+            "org",
+            "plaintex",
+            "rst",
+            "rnoweb",
+            "tex",
+            "pandoc",
+            "quarto",
+            "rmd",
+            "context",
+            "html",
+            "xhtml",
+            "mail",
+            "text",
+          },
+        },
         nginx_language_server = {}, -- The crazy nginx configuration files
-        pyright = { mason = false, autostart = false },
+        -- pyright = { mason = false, autostart = false },
         ruff = {}, -- ruff directly supports the lsp protocol
-        sqls = {}, -- editing .sql files
-        yamlls = {}, -- already includes schema store support
+        -- sqls = {}, -- editing .sql files
+        -- yamlls = {}, -- already includes schema store support
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
