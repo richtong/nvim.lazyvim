@@ -7,15 +7,57 @@ by running `lvim`. Overally, it is very hard to make this all work, so instead, 
 
 See [Keymaps](https://www.lazyvim.org/keymaps)
 
-1. Solarized generating a can't find scheme error
+- [ ] Solarized generating a can't find scheme error for two schemes
+- [ ] Ruff for python to get completions, pydocstyles force and black
+- [ ] Shell script shellcheck and shfmt
+- [ ] Reformatting shell and python
+- [ ]  
+
+## New keymaps to learn
+
 1. Change vim.g.mapleader = "\\" in options.lua
 1. Changed key maps ]g and [g are now ]d and [d for going to next error and fixes are [g and [g
-1. Adding a comment is now gco and gcO
-1. Buffer command :bd are now \bd
+1. Adding a comment is now gco and gcO, toggle comment is gcc from the old \cc
+1. Buffer command :bd are now \bd and moving is S-h, l and ]b and [b from bufferline.nvim
 1. Location and Quickfix lists at \xl and \xq
 1. Format gqq is not \cf and Autoformat is \uf, Spelling is \us and Wrap is \uw
 1. set relnumber is now \uL
 1. starting lazygit is \gg at root dir or \gG for in current directly \gb is blame
+1. \uI inspect syntax tree of current file
+
+The LSP commands:
+
+1. \cl LSP LspInfo
+1. gd, gr, gI, gy, gD  goto Definition, References, Implementation, Type and Declaration
+1. K Hover
+1. gK Signature help or c-k
+1. \ca code action, \cc run codelens
+1. \cR rename file, \cr rename, \cA Source action
+1. ]] next reference, [[ previous or a-n and a-p works (Option N and P)
+
+NeoTree (like NerdTree):
+
+1. \be Buffer Explore
+1. \e NeoTree at root, \E NeoTree at cwd
+
+Telescope.nvim and fzf:
+
+1. \<space> Find files at root
+1. \, switch buffers
+1. \/ grep at root
+1. \f find things
+
+nvim-dap, nvim-dap-python
+
+1. \d Debug
+1. \da run w ith args
+1. \db breakpoints
+1. \dc continue
+1. \dPc debug class
+1. \dPt debug method
+
+1. \cp markdown markddown-preview
+
 
 
 ## 💤 LazyVim Starter
