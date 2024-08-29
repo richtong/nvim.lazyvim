@@ -97,6 +97,7 @@ return {
     ---@class PluginLspOpts
     opts = {
       ---@type lspconfig.options
+      autoformat = true,
       -- most of these are in LazyExtra
       servers = {
         -- tsserver will be automatically installed with mason and loaded with lspconfig
@@ -113,25 +114,10 @@ return {
         -- gopls = {}, -- Google's golang
         -- helm_ls = {}, -- K8s helm files
         jqls = {}, -- the crazy jq json query language
-        ltex = { -- ltex do not use for "markdown" too noisy
-          filetypes = {
-            "bib",
-            "gitcommit",
-            "org",
-            "plaintex",
-            "rst",
-            "rnoweb",
-            "tex",
-            "pandoc",
-            "quarto",
-            "rmd",
-            "context",
-            "html",
-            "xhtml",
-            "mail",
-            "text",
-          },
-        },
+        -- ltex = { -- ltex alternative to LazyExtra.lang.tex with spelling as main addition
+        -- use filetype is you don't want spell check for md, text, html etc
+        -- filetypes = { "bib", "plaintex", "tex", "pandoc", "quarto" },
+        -- },
         nginx_language_server = {}, -- The crazy nginx configuration files
         -- pyright = { mason = false, autostart = false },
         ruff = {}, -- ruff directly supports the lsp protocol

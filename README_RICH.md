@@ -20,11 +20,13 @@ However this doesn't include things like bashls so you still need some of this
 
 ## Notes on customizing the LazyVim Starter
 
-- [ ] Spell checking
-- [x] Shell script using bashls instead
-- [ ] Ruff for python to get completions, pydocstyles force and black
-- [ ] Reformatting shell and python
+- [ ] Ruff vs pyright for python to get completions, pydocstyles force and
+      black or just use pyright
 - [ ] Even with auto wordwrap it does not use gww or gw} for now
+- [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg
+      or or you can use ltex for more advanced stuff and is way busier
+- [x] shell script using bashls instead for shellcheck but shfmt does not seem
+      to work
 - [x] Font does not show correct glyphs looks like this is the lsp. Need to
       brew install the font and then make sure that iterm2 profile uses it in `iTerm2
 | Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
@@ -40,6 +42,20 @@ However this doesn't include things like bashls so you still need some of this
       [colorscheme](https://www.lazyvim.org/plugins/colorscheme)
 - [x] Word wrap with gww, but autoformat is off in options.lua put in
       vim.g.autoformat (g means global)
+
+## The new Git workflow
+
+Ok there is lazygit inside this thing so you don't have to leave neovim to
+commit, just run \gg and then a 'c' commits and a 'P' pushes. Kind of nice
+although I'm used to being in the shell doing this
+
+## Dealing with Spelling
+
+I was using coc-spell but LazyVim just uses the standard vim
+[spelling](https://stackoverflow.com/questions/27680639/vim-automatically-advance-to-next-misspelled-word-after-taking-action-on-curren)
+keys, so instead of saw too
+add a word, it is the usual ]s and [s to find misspells and z= for spelling proposal
+and zg to add it to the dictionary
 
 ## LazyVim customization
 
@@ -60,22 +76,23 @@ The general form is:
 4. One important thing that you can add is a dependencies tag with a list of
    plugins that are required, there is a
    of these [options](https://www.lazyvim.org/configuration/plugins), but they
-   are mainly opts and dependences and ft for filetypes that should acrtivate the
+   are mainly opts and dependences and ft for filetypes that should activate the
    plugins
 
-## Customizing LSP
+## Customizing LSP for things not in LazyExtras
 
 The more complex plugins like "neovim/lsconfig" will have a huge list of things
-that can go into opts. The most important
-is `servers` which list the LSPs to add. When you get the right name, then
-mason will automatically install them
+that can go into opts. The most important is `servers` which list the LSPs to
+add. When you get the right name, then mason will automatically install them
 But you can look into eash function like
 [LSP](https://www.lazyvim.org/plugins/lsp) to see what they are.
 
-By default, lazyvim does not support bash, it has pyright, lua_ls, vtsls and jsonls
+By default, lazyvim does not support bash, it has pyright, lua_ls, vtsls and
+jsonls and you get more with LazyExt- [ ]
+ras, here are the things that you can't get
 
 The configuration is pretty mysterious, but basically go to the [server
-configuration](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#bashls)
+Configuration](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#bashls)
 in nvim-lspconfig and look for the actual string that is the server and
 then go to the ./lua/config and put this into a lua file, I use `base.lua` because
 I saw this was the name in the full lazyvim configuration, then if you just put this
@@ -99,30 +116,41 @@ but it looks like this is already laoded by
 [default](https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/yaml.lua)
 so not needed.
 
+This is for the things that you can't get which are:
+
+1. bashls and shfmt. bashls replaces shellcheck but LSP don't typically provide
+   formatting or debugging
+   for that matter so you need to add [shfmt](https://github.com/LazyVim/LazyVim/discussions/315)
+1. Autoformat on save, is a life saver
+
 ```lua
 {
-  "neovim/nvim-lspconfifg",
+  "neovim/nvim-lspconfig",
   opts = {
     servers = {
-      tsserver = {},
-      markman = {},  ## markdown
       bashls = {},  ## bash
-      jsonls = {
         -- override the defaults
         settings = {
           -- what every you like
         },
       },
+    autoformat = true,
   },
 },
 ```
 
 ### Language specific LSP plugins
 
-Each language may have addtional configuratino beyond the current one, so you
+Each language may have additional configuration beyond the current one, so you
 also need to load [language
 specific](https://github.com/neovim/nvim-lspconfig/wiki/Language-specific-plugins).
-You stick these into the additiona dependencies
+You stick these into the additional dependencies.
+
+Note that if you delete the installation then Mason does not remove them so you
+either have to manually not autostart them or do a `MasonUninstallAll` to get rid of
+all the plugins and then on next start of neovim, it will install just the ones
+in your configuration. The `Mason` is also convenient. There is no uninstall but you
+can see where the items are coming from by what's calling them.
 
 - jsonls. Needs schemastore
 - ltex-ls. grammard-guard.nvim and ltex_extra.nvim
