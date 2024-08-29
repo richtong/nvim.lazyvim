@@ -119,8 +119,44 @@ return {
         -- filetypes = { "bib", "plaintex", "tex", "pandoc", "quarto" },
         -- },
         nginx_language_server = {}, -- The crazy nginx configuration files
-        -- pyright = { mason = false, autostart = false },
-        ruff = {}, -- ruff directly supports the lsp protocol
+        -- pyright = { mason = false, autostart = false }, -- pyright part of lazyvim, use this to disable
+        -- https://docs.astral.sh/ruff/editors/settings/#linelength
+        ruff = {
+          settings = {
+            lineLength = 80, -- black replacement
+            organizeImports = true, -- isort replacement
+            lint = {
+              select = {
+                "F", -- pyright
+                "E", -- pycodestyle
+                "W", -- pycodestyle warnings
+                "C", -- mccabe code complexity
+                "I", -- isort
+                "N", -- PEP8 naming
+                "D", -- pydocstyle docstrings
+                "UP", -- pyupgrade
+                "YTT", -- flake8-2020
+                "ANN", -- flake8-annotations
+                "S", -- flake8-bandit
+                "FBT", -- flake8-boolean-trap
+                "B", -- flake8-bugbear
+                "A", -- flake8-builtin showing
+                "COM", -- flake8-commas missing
+                "C4", -- flake8-comprehensions simplification
+                "DTZ", -- flake8-datetimez errors
+                "EM", -- flake8-errmsg
+                "EXE", -- flake8-executalbe
+                "PTH", -- flake8-use-pathlib no os.path
+                "PD", -- pandas-vet
+                "PL", -- pylint refactor, warn, errors
+                "NPY", -- numpy
+                "PERF", -- perflint
+                "DOC", -- pydoclint
+                "RUF", -- ruff specific rules
+              },
+            },
+          },
+        },
         -- sqls = {}, -- editing .sql files
         -- yamlls = {}, -- already includes schema store support
       },
