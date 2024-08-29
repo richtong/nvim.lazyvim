@@ -1,34 +1,164 @@
 # Rich's Nvim
 
-This NVIM is inspired by LazyVIM, but built by hand to remove some of the things in it. You can always access LunarVim which is quite close
-by running `lvim`. Overally, it is very hard to make this all work, so instead, I'm going to try to just get the LazyVim Starter working
+This NVIM is inspired by LazyVIM, but built by hand to remove some of the
+things in it. You can always access LunarVim which is quite close by running
+`lvim`. Overally, it is very hard to make this all work, so instead, I'm going
+to try to just get the LazyVim Starter working
 
 ## Notes on customizing the LazyVim Starter
 
-See [Keymaps](https://www.lazyvim.org/keymaps)
-
-- [ ] Solarized generating a can't find scheme error for two schemes
+- [ ] Spell checking
+- [x] Shell script using bashls instead
 - [ ] Ruff for python to get completions, pydocstyles force and black
-- [ ] Shell script shellcheck and shfmt
 - [ ] Reformatting shell and python
-- [ ]  
+- [ ] Even with auto wordwrap it does not use gww or gw} for now
+- [x] Font does not show correct glyphs looks like this is the lsp. Need to
+brew install the font and then make sure that iterm2 profile uses it in `iTerm2
+| Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
+You should load nerd fonts as these have all the glyphs you need. The Usable
+fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
+- [x] Automatic word wrapping is \uw or in options.lua put in vim.opt.wrap=true
+this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps
+to the next empty space
+- [x] Change vim.g.mapleader = "\\" in ./lua/config/options.lua
+- [x] Change to solarized, edit ./lua/plugins/base.lua add the .nvim file,
+options does not want the .nvim suffix
+- [x] :colorscheme still changes this dynamically
+[colorscheme](https://www.lazyvim.org/plugins/colorscheme)
+- [x] Word wrap with gww, but autoformat is off in options.lua put in
+vim.g.autoformat (g means global)
+
+## LazyVim customization
+
+Note that LazyVim has it's own customization system. Instead of calling things directly, you 
+return these massive JSON lists that LazyVim deals with them.
+
+The general form is:
+
+1. An array with the name of the plugin, so if you `return {"crafxdong/solarized-osaka.nvim"}` in any .lua file in 
+./lua/plugins, it will just load *
+2. If you want to set options, then add into that array an opts
+and then a `opts` array with the options so return {"LazyVim/LazyVim", opts = { colorscheme = "solarized",}}"
+3. Note that with Lua, you can just keep adding commas,  to return an entire gigantic structure
+1. One important thing that you can add is a dependencies tag with a list of plugins that are required, there is a
+of these [options](https://www.lazyvim.org/configuration/plugins), but they are mainly opts and dependences and ft for filetypes that should acrtivate the plugins
+
+## Customizing LSP
+
+
+The more complex plugins like "neovim/lsconfig" will have a huge list of things that can go into opts. The most important
+is `servers` which list the LSPs to add. When you get the right name, then mason will automatically install them
+But you can look into eash function like [LSP](https://www.lazyvim.org/plugins/lsp) to see what they are. 
+
+By default, lazyvim does not support bash, it has pyright, lua_ls, vtsls and jsonls
+
+The configuration is pretty mysterious, but basically go to the [server configuration](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#bashls) in nvim-lspconfig and look for the actual string that is the server and 
+then go to the ./lua/config and put this into a lua file, I use `base.lua` because
+I saw this was the name in the full lazyvim configuration, then if you just put this 
+name in, then Mason will install what it needs. Note these names are not necessarily the which is 
+
+You need to look for the string in the middle of the `require'lspconfig'.jedi_language_server.setup()` in 
+each of the entries in the server configuration. But basically after you list the servers, you can put in the
+{} brackets the setup options for each
+
+So in the example below the jsonls requires things, if you look into the normal
+code, the stuff after the require setup is what you need
+
+And at the end there is a setup which has other things you can run for custom setups
+
+Note that for things like schemes, you can always add them directly into your YAML file
+with a [comment](https://github.com/LazyVim/LazyVim/discussions/1905) but it looks like this
+is already laoded by [default](https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/yaml.lua) so not needed.
+
+```lua
+{
+  "neovim/nvim-lspconfifg",
+  opts = {
+    servers = {
+      tsserver = {},
+      markman = {},  ## markdown
+      bashls = {},  ## bash
+      jsonls = {
+        -- override the defaults
+        settings = {
+          -- what every you like
+        },
+      },
+  },
+},
+```
+### Language specific LSP plugins
+
+Each language may have addtional configuratino beyond the current one, so you also need to load [language specific](https://github.com/neovim/nvim-lspconfig/wiki/Language-specific-plugins). You stick these into the additiona dependencies
+
+- jsonls. Needs schemastore
+- ltex-ls. grammard-guard.nvim and ltex_extra.nvim
+
+## The confusiong which is Python and JSON  LSPs
+
+As usual Python has an amazing host of overlapping LSPs and tools:
+
+The default ones already installed but you can add parameters and override configurations in ./lua/plugins:
+
+- pyright. This is the Microsoft default [server](https://www.andersevenrud.net/neovim.github.io/lsp/configurations/pyright/)
+- lua_ls. For lua
+- vtsls.
+- jsonls. The JSON one is already installed
+
+Note that you can see everything loaded with `:Mason`
+
+Competing ones:
+
+- jedi. This is the original LSP that I've used before, you get this as a full LSP `jedi_lanaguage_server`
+- ltex vs markman. These support both markdown (and ltex does Latex too)
+- russ vs pyright. Ruff is faster as it is written in rust
+
+To turn of pyright, you have to do please don't install and if installed, please do not start me
+
+```
+{
+  "neovim/nvim-lspconfig",
+  opts = {
+    servers = {
+      pyright = { mason = false, autostart = false},
+    },
+  }
+}
+```
+
+These could compete with vtsls:
+- stylelint. for css
+- eslint. The typescript vs. vtsls
+- superhtml - html linting, does vtsls have this?
+- yamlls - does jsonls competed, you can tell by opening a .yaml file and then :LspInfo to see what is attached
+
+The many python ones
+- pylsp - Another python LSP
+- pylizer - Code analyzer
+- pyre - static type checker
+- pyright - the default in lazyvim, have to decide if we should convert to it or to ruff
 
 ## New keymaps to learn
 
-1. Change vim.g.mapleader = "\\" in options.lua
-1. Changed key maps ]g and [g are now ]d and [d for going to next error and fixes are [g and [g
+1. Changed key maps ]g and [g are now ]d and [d for going to next error and
+fixes are [g and [g
 1. Adding a comment is now gco and gcO, toggle comment is gcc from the old \cc
-1. Buffer command :bd are now \bd and moving is S-h, l and ]b and [b from bufferline.nvim
+1. Buffer command :bd are now \bd and moving is S-h, l and ]b and [b from
+bufferline.nvim and \be turns on and off the buffer explorer
 1. Location and Quickfix lists at \xl and \xq
 1. Format gqq is not \cf and Autoformat is \uf, Spelling is \us and Wrap is \uw
 1. set relnumber is now \uL
-1. starting lazygit is \gg at root dir or \gG for in current directly \gb is blame
+1. starting lazygit is \gg at root dir or \gG for in current directly \gb is
+blame
 1. \uI inspect syntax tree of current file
+1. Finding files with \ff for files, \fb for buffer, type \f for help
+1. Manual word wrap gww
 
 The LSP commands:
 
 1. \cl LSP LspInfo
-1. gd, gr, gI, gy, gD  goto Definition, References, Implementation, Type and Declaration
+1. gd, gr, gI, gy, gD  goto Definition, References, Implementation, Type and
+Declaration
 1. K Hover
 1. gK Signature help or c-k
 1. \ca code action, \cc run codelens
