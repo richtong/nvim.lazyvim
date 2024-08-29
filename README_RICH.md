@@ -472,8 +472,9 @@ This is a very useful of
 [recipes](https://www.lazyvim.org/configuration/recipes) for the neovim
 community. Here are some of the most useful ones.
 
-Supertab let's you use the Tabl key for  completions and snippets with a pretty big
-[snippet](https://www.lazyvim.org/configuration/recipes#supertab) to enable it that I put in [supertab.lua](plugins/supertab.lua)
+Supertab let's you use the Tabl key for  completions and snippets with a pretty
+big [snippet](https://www.lazyvim.org/configuration/recipes#supertab) to
+enable it that I put in [supertab.lua](plugins/supertab.lua)
 
 ## New keymaps to learn
 
@@ -483,15 +484,39 @@ Supertab let's you use the Tabl key for  completions and snippets with a pretty 
 1. Buffer command :bd are now \bd and moving is S-h, l and ]b and [b from
    bufferline.nvim and \be turns on and off the buffer explorer
 1. Location and Quickfix lists at \xl and \xq
-1. Format gqq is not \cf and Autoformat is \uf, Spelling is \us and Wrap is \uw
-1. set relnumber is now \uL
+1. set relnumber is now \uL, Autoformat is \uf, Spelling is \us and Wrap is \uw
+   but you should turn these on in base.lua
 1. starting lazygit is \gg at root dir or \gG for in current directly \gb is
    blame
 1. \uI inspect syntax tree of current file
 1. Finding files with \ff for files, \fb for buffer, type \f for help
-1. Manual word wrap gww
+1. Manual word wrap gww and gw} for next blank space
 
-The LSP commands:
+### Sandwich and surround
+
+I use these alot with vim-sandwich before, but the new LazyVim version is [mini-surround](https://github.com/echasnovski/mini.surround)
+
+- Actions are similar, `sa` means add, `sd` delete, `sr` replace, `sf` find,
+`sh` highlight
+- The next character tells you what to do
+  - `f` function call
+  - `()`, `[]`, `{}` get you to to those special characters
+
+And note that which-key gives you instructions which is nice!
+
+```vim
+gsaiw"  -  Go Surround Around Insert Word a quotes
+gsd"    -  Go Surround Delete Quotes
+gsr"[   -  Go Surround Replace " with [
+```
+
+```
+```
+
+This does not seem to work though which you can debug with `:map` and it looks like .
+`s` is used by flash in Treesitter and some work leads you to the `gsa` keys
+
+### The LSP commands
 
 1. \cl LSP LspInfo
 1. gd, gr, gI, gy, gD goto Definition, References, Implementation, Type and
@@ -502,7 +527,7 @@ The LSP commands:
 1. \cR rename file, \cr rename, \cA Source action
 1. ]] next reference, [[ previous or a-n and a-p works (Option N and P)
 
-NeoTree (like NerdTree):
+### NeoTree (like NerdTree)
 
 1. \be Buffer Explore
 1. \e NeoTree at root, \E NeoTree at cwd
