@@ -7,16 +7,17 @@
 -- * override the configuration of LazyVim plugins
 return {
   -- add gruvbox (yuck)
-  { "ellisonleao/gruvbox.nvim" },
-  -- top search hit for a neovim lua solarized
-  { "craftzdog/solarized-osaka.nvim" },
+  -- { "ellisonleao/gruvbox.nvim" },
+  -- top search hit for a neovim lua solarized doesn't work
+  -- { "craftzdog/solarized-osaka.nvim" },
+  { "maxmx03/solarized.nvim" },
 
   -- Configure LazyVim to load colorscheme
   {
     "LazyVim/LazyVim",
     opts = {
       --    colorscheme = "gruvbox",
-      colorscheme = "solarized-osaka.nvim",
+      colorscheme = "solarized.nvim",
     },
   },
 

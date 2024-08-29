@@ -3,6 +3,21 @@
 This NVIM is inspired by LazyVIM, but built by hand to remove some of the things in it. You can always access LunarVim which is quite close
 by running `lvim`. Overally, it is very hard to make this all work, so instead, I'm going to try to just get the LazyVim Starter working
 
+## Notes on customizing the LazyVim Starter
+
+See [Keymaps](https://www.lazyvim.org/keymaps)
+
+1. Solarized generating a can't find scheme error
+1. Change vim.g.mapleader = "\\" in options.lua
+1. Changed key maps ]g and [g are now ]d and [d for going to next error and fixes are [g and [g
+1. Adding a comment is now gco and gcO
+1. Buffer command :bd are now \bd
+1. Location and Quickfix lists at \xl and \xq
+1. Format gqq is not \cf and Autoformat is \uf, Spelling is \us and Wrap is \uw
+1. set relnumber is now \uL
+1. starting lazygit is \gg at root dir or \gG for in current directly \gb is blame
+
+
 ## 💤 LazyVim Starter
 
 A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
