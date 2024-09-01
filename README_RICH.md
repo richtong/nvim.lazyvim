@@ -7,8 +7,9 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
-- [ ] Even with auto wordwrap it does not use gww or gw} for now for
-      markdown
+- [x] Even with auto wordwrap it does not use gww or gw} for now for
+      markdown. Need to set vim.opt.wrap=true in config.lua to make word wrap
+      work correctly
 - [x] figuring out finding, so \e starts neotree in a window
       while \f starts Telescope in a modal dialog box
 - [x] shell script using bashls but also need shellcheck for linting and
@@ -384,8 +385,8 @@ Overall the configurations of this stuff are really confusing, since a tool like
 this since it is not part of a LSP is handled either directly as a plugin or with
 null-ls
 
-Note that word wrap doesn't appear to work with markdown, so it is not clear what is
-handling that
+Note that word wrap doesn't appear to work with markdown, so it is not clear
+what is handling that
 
 ### Bash: Bashls and Shellcheck and conform and shfmt
 
@@ -403,9 +404,9 @@ shellcheck.
 and it seems to be enabled by default and setting autoformat works
 Note that shfmt options even with autoformat_on_save set does not autoformat
 
-To see what is going on, you can look at the main [LazyVim](https://github.com/LazyVim/LazyVim/tree/main) repo
-but the documentation shows the default configuration in the Plugins and
-Extras section.
+To see what is going on, you can look at the main
+[LazyVim](https://github.com/LazyVim/LazyVim/tree/main) repo but the
+documentation shows the default configuration in the Plugins and Extras section.
 
 instead LazyVim has LazyFormat which uses [conform](https://www.lazyvim.org/plugins/formatting)
 to do editing

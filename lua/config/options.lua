@@ -24,7 +24,8 @@ vim.g.mapleader = "\\"
 -- this is not documented, if you do not set them vim.g.wrap does not work
 -- https://www.lazyvim.org/configuration/general#options in default
 -- sets vim.opt.local.wrap = true, and vim.opt_local.spell = true but not...
-vim.opt.textwidth = 88
+-- textwidth 88 is black and textwidth 80 is markdown-cli2
+vim.opt.textwidth = 80
 
 -- https://github.com/LazyVim/LazyVim/discussions/141
 -- set in
