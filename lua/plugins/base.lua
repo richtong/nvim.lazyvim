@@ -107,7 +107,7 @@ return {
         tsserver = {}, -- typescript
         -- marksman = { mason = false, autostart = false }, -- if you only want ltex
         -- marksman = {}, -- markdown when ltex loaded both are checking
-        bashls = {}, -- bash
+        bashls = {}, -- shellcheck and shfmt configs are controlled outside of neovim with ~/.editorconfig
         -- dockerls = {}, -- dockerfiles
         docker_compose_language_service = {}, -- docker compose yaml
         dotls = {}, -- graphviz .dot files
@@ -123,7 +123,7 @@ return {
         -- https://docs.astral.sh/ruff/editors/settings/#linelength
         ruff = {
           settings = {
-            lineLength = 80, -- black replacement
+            lineLength = 88, -- black replacement and 88 is now default
             organizeImports = true, -- isort replacement
             lint = {
               select = {

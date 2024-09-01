@@ -5,6 +5,66 @@ things in it. You can always access LunarVim which is quite close by running
 `lvim`. Overally, it is very hard to make this all work, so instead, I'm going
 to try to just get the LazyVim Starter working
 
+## Current problems (resolved ones)
+
+- [ ] Even with auto wordwrap it does not use gww or gw} for now for
+      markdown
+- [x] figuring out finding, so \e starts neotree in a window
+      while \f starts Telescope in a modal dialog box
+- [x] shell script using bashls but also need shellcheck for linting and
+      shfmt for linting which Mason installs Bashls discovers these. [bashls](https://github.com/bash-lsp/bash-language-server)
+- [x] Word wrap with gww, but autoformat is off in options.lua put in
+      vim.g.autoformat (g means global)
+- [x] Ruff vs pyright for python to get completions, pydocstyles force and
+      black or just use pyright. Ruff with the right setting emulates all
+      pydocstyles by enable the 'E' for pycodestyle, 'F' for pyright, 'I' for
+      isort. Leaving pyright on for right now.
+- [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg
+      or or you can use ltex for more advanced stuff and is way busier
+- [x] Font does not show correct glyphs looks like this is the lsp. Need to
+      brew install the font and then make sure that iterm2 profile uses it in `iTerm2
+| Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
+      You should load nerd fonts as these have all the glyphs you need. The Usable
+      fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
+- [x] Automatic word wrapping is \uw or in options.lua put in vim.opt.wrap=true
+      this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps
+      to the next empty space
+- [x] Change vim.g.mapleader = "\\" in ./lua/config/options.lua
+- [x] Change to solarized, edit ./lua/plugins/base.lua add the .nvim file,
+      options does not want the .nvim suffix
+- [x] :colorscheme still changes this dynamically
+      [colorscheme](https://www.lazyvim.org/plugins/colorscheme)
+
+## Finding files with neotree and telescope
+
+Ok, we are way past `:e` and automatic finding, there are two totally different
+ways to find things, [Neotree](https://github.com/nvim-neo-tree/neo-tree.nvim)
+starts with \e or \E and you have a pane on the left with bunch of unknown
+commands, you can look these up or use `:help neo-tree-mappings` to figure them out.
+
+Some of the important commands are:
+
+- `.` sets the root to the current folder. Note that if you go to the root
+  and press `Backspace` it will move up to the parent and set that as the top
+  of Neo-tree
+- `/` will do a fuzzy search across the whole file tree
+- `H` will show you hidden files
+- `o` will reorder the tree
+- `gA` does a git add!, `gc` does a git commit, `gp` does a git push
+- Note that you can move to different windows (they call panes windows) with
+  the `Ctrl-w` and you can add a modifier like hjkl to move in different windows
+  or q to close a window. and CTRL-w twice switched to the last window.
+
+Telescope is a completely different interface with a modal dialog box you get
+with `\f` so you can get to neo-tree with `\fe` but \f gives you fuzzy finding
+quickly vs lots of browsing with neo-tree.
+
+This gives you a preview of the file and you can do things like `CTRL-f` to
+move the preview forward and to move in the windows you need `CTRL-j` as
+movements since typing regular characters does the fuzzy find.
+
+TElescope also works in text, so `gd` means to to definition in text
+
 ## 💤 LazyVim Starter
 
 A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
@@ -221,31 +281,6 @@ that you can do if you need more than LazyExtras:
 
 However this doesn't include things like bashls so you still need some of this
 
-## Notes on customizing the LazyVim Starter
-
-- [ ] Ruff vs pyright for python to get completions, pydocstyles force and
-      black or just use pyright
-- [ ] Even with auto wordwrap it does not use gww or gw} for now
-- [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg
-      or or you can use ltex for more advanced stuff and is way busier
-- [x] shell script using bashls instead for shellcheck but shfmt does not seem
-      to work
-- [x] Font does not show correct glyphs looks like this is the lsp. Need to
-      brew install the font and then make sure that iterm2 profile uses it in `iTerm2
-| Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
-      You should load nerd fonts as these have all the glyphs you need. The Usable
-      fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
-- [x] Automatic word wrapping is \uw or in options.lua put in vim.opt.wrap=true
-      this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps
-      to the next empty space
-- [x] Change vim.g.mapleader = "\\" in ./lua/config/options.lua
-- [x] Change to solarized, edit ./lua/plugins/base.lua add the .nvim file,
-      options does not want the .nvim suffix
-- [x] :colorscheme still changes this dynamically
-      [colorscheme](https://www.lazyvim.org/plugins/colorscheme)
-- [x] Word wrap with gww, but autoformat is off in options.lua put in
-      vim.g.autoformat (g means global)
-
 ## The new Git workflow
 
 Ok there is lazygit inside this thing so you don't have to leave neovim to
@@ -309,9 +344,8 @@ the servers, you can put in the
 {} brackets the setup options for each
 
 So in the example below the jsonls requires things, if you look into the normal
-code, the stuff after the require setup is what you need
-
-And at the end there is a setup which has other things you can run for custom setups
+code, the stuff after the require setup is what you need And at the end there
+is a setup which has other things you can run for custom setups
 
 Note that for things like schemes, you can always add them directly into your
 YAML file with a [comment](https://github.com/LazyVim/LazyVim/discussions/1905)
@@ -321,10 +355,10 @@ so not needed.
 
 This is for the things that you can't get which are:
 
-1. bashls and shfmt. bashls replaces shellcheck but LSP don't typically provide
-   formatting or debugging
-   for that matter so you need to add [shfmt](https://github.com/LazyVim/LazyVim/discussions/315)
-1. Autoformat on save, is a life saver
+1. Autoformat on save, is a life saver which you can set in options.lua
+   with the vim.g.autoformat_on_save or it can be an option for nvim-lspconfig only
+1. [format.lua](https://github.com/LazyVim/LazyVim/discussions/141) and you can
+   change dynamically with \uf
 
 ```lua
 {
@@ -342,6 +376,47 @@ This is for the things that you can't get which are:
 },
 ```
 
+### Markdown support
+
+This is automatic with configurations setting with LazyVim is very confusing,
+so it uses markdownlint-cli2 and it looks like they are configured in [nvim-lint](https://github.com/LazyVim/LazyVim/discussions/4094)
+Overall the configurations of this stuff are really confusing, since a tool like
+this since it is not part of a LSP is handled either directly as a plugin or with
+null-ls
+
+Note that word wrap doesn't appear to work with markdown, so it is not clear what is
+handling that
+
+### Bash: Bashls and Shellcheck and conform and shfmt
+
+Bash is a poor step child in the LSP world. The [Bash
+LSP](https://github.com/bash-lsp/bash-language-server/issues/104) is for a
+relatively initially limited to set of things, specifically symbol highlighting
+,jump to definition and and autocomplete. This is not like other LSPs like ruff
+which includes linting and formatting. But they did add shellcheck integration
+and now shfmt
+
+Shellcheck works out of the box if shellcheck is installed with brew install
+shellcheck.
+
+[shfmt](https://github.com/LazyVim/LazyVim/discussions/315) is also used but
+and it seems to be enabled by default and setting autoformat works
+Note that shfmt options even with autoformat_on_save set does not autoformat
+
+To see what is going on, you can look at the main [LazyVim](https://github.com/LazyVim/LazyVim/tree/main) repo
+but the documentation shows the default configuration in the Plugins and
+Extras section.
+
+instead LazyVim has LazyFormat which uses [conform](https://www.lazyvim.org/plugins/formatting)
+to do editing
+
+Setting options is harder and is not part of the neovim installation instead,
+you so you need to set ~/.editorconfig shfmt
+see [discussion](https://github.com/bash-lsp/bash-language-server/pull/1165)
+
+Also not that autoformat_on_save is not enabled by default with bashls
+but this is not turned on by default in bash-ls.
+
 ### Language specific LSP plugins
 
 Each language may have additional configuration beyond the current one, so you
@@ -350,10 +425,11 @@ specific](https://github.com/neovim/nvim-lspconfig/wiki/Language-specific-plugin
 You stick these into the additional dependencies.
 
 Note that if you delete the installation then Mason does not remove them so you
-either have to manually not autostart them or do a `MasonUninstallAll` to get rid of
-all the plugins and then on next start of neovim, it will install just the ones
-in your configuration. The `Mason` is also convenient. There is no uninstall but you
-can see where the items are coming from by what's calling them.
+either have to manually not autostart them or do a `MasonUninstallAll` to get
+rid of all the plugins and then on next start of neovim, it will install just
+the ones in your configuration. The `Mason` is also convenient. There is no
+uninstall but you can see where the items are coming from by what's calling
+them.
 
 - jsonls. Needs schemastore
 - ltex-ls. grammard-guard.nvim and ltex_extra.nvim
@@ -377,9 +453,10 @@ Competing ones:
 - jedi. This is the original LSP that I've used before, you get this as a full
   LSP `jedi_lanaguage_server` but ruff seems better
 - ltex vs markman. These support both markdown (and ltex does Latex too and is very
-wordy with spell check
-- russ vs pyright. Ruff is faster as it is written in rust and is a superset of pyright. Since
-pyright is native to LazyVim, you have to explicitly disable it
+  wordy with spell check
+- russ vs pyright. Ruff is faster as it is written in rust and is a superset of
+  pyright. Since pyright is native to LazyVim, you have to explicitly disable
+  it. Right now I leave it on.
 
 ```lua
 {
@@ -458,7 +535,8 @@ pyproject.toml and then turn on pre-commit so that you have the same test.
 ## Completions vs LSP vs Linting vs Formatting
 
 Confusingly the LSP can do many things but sometimes not others. For instance,
-bash-ls does linting but not formatting, so you need shfmt for this.
+bash-ls does linting but not formatting, so you need shfmt for this and it does
+not seem to autoformat correctly like :Black used to do.
 
 Generally through, completions of what you type are handled by nvim-cmp and
 nvim-lsp-config handles the LSPs which general do syntax checking. formatting and
@@ -472,14 +550,17 @@ This is a very useful of
 [recipes](https://www.lazyvim.org/configuration/recipes) for the neovim
 community. Here are some of the most useful ones.
 
-Supertab let's you use the Tabl key for  completions and snippets with a pretty
+Supertab let's you use the Tabl key for completions and snippets with a pretty
 big [snippet](https://www.lazyvim.org/configuration/recipes#supertab) to
 enable it that I put in [supertab.lua](plugins/supertab.lua)
 
 ## New keymaps to learn
 
-1. Changed key maps ]g and [g are now ]d and [d for going to next error and
-   fixes are [g and [g
+1. Diagonostics Changed key maps ]g and [g are now ]d and [d for going to next
+   error and fixes are [g and [g and if you want to look at the lists then its
+   \x and \xx will give the errors in a windows at the bottom,
+   navigate and on a particular error, press enter to get to that line, really
+   handy and then to go back with ^W^W. And close with q.
 1. Adding a comment is now gco and gcO, toggle comment is gcc from the old \cc
 1. Buffer command :bd are now \bd and moving is S-h, l and ]b and [b from
    bufferline.nvim and \be turns on and off the buffer explorer
@@ -497,7 +578,7 @@ enable it that I put in [supertab.lua](plugins/supertab.lua)
 I use these alot with vim-sandwich before, but the new LazyVim version is [mini-surround](https://github.com/echasnovski/mini.surround)
 
 - Actions are similar, `sa` means add, `sd` delete, `sr` replace, `sf` find,
-`sh` highlight
+  `sh` highlight
 - The next character tells you what to do
   - `f` function call
   - `()`, `[]`, `{}` get you to to those special characters
@@ -510,11 +591,9 @@ gsd"    -  Go Surround Delete Quotes
 gsr"[   -  Go Surround Replace " with [
 ```
 
-```
-```
-
-This does not seem to work though which you can debug with `:map` and it looks like .
-`s` is used by flash in Treesitter and some work leads you to the `gsa` keys
+This does not seem to work though which you can debug with `:map` and it looks
+like . `s` is used by flash in Treesitter and some work leads you to the `gsa`
+keys
 
 ### The LSP commands
 
