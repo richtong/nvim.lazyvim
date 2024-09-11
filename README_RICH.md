@@ -7,6 +7,9 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
+- [ ] Schemastore does not seem to work with Yaml, but manually insert does for
+      mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate
+      it
 - [x] Even with auto wordwrap it does not use gww or gw} for now for
       markdown. Need to set vim.opt.wrap=true in config.lua to make word wrap
       work correctly
@@ -100,7 +103,9 @@ Major components for an IDE so Mason > Nvim-lspconfig, nvim-telescope, nvim-tree
   linting and other things.
 - [Nvim-telescope](https://github.com/nvim-telescope/telescope.nvim) - A fuzzy
   finder like fzf and has modular components and can use fzf underneath. \fp
-  finds telescope plugins
+  finds telescope plugins, but not that if you install fzf in LazyExtras, you
+  get a conflict with telescope, so only install telescope, it seems fine and
+  fast.
 - [Nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - much
   smarter highlighting as it understands the abstract symbol tree for code and so
   coloring works well.
@@ -432,32 +437,37 @@ the ones in your configuration. The `Mason` is also convenient. There is no
 uninstall but you can see where the items are coming from by what's calling
 them.
 
-- jsonls. Needs schemastore
-- ltex-ls. grammard-guard.nvim and ltex_extra.nvim
-
-## The confusiong which is Python and JSON LSPs
-
-As usual Python has an amazing host of overlapping LSPs and tools:
-
+Note that you can see everything loaded with `:Mason`
 The default ones already installed but you can add parameters and override
 configurations in ./lua/plugins:
 
 - pyright. This is the Microsoft default [server](https://www.andersevenrud.net/neovim.github.io/lsp/configurations/pyright/)
-- lua_ls. For lua
 - vtsls.
-- jsonls. The JSON one is already installed
+- jsonls. The JSON one is already installed and you get schemastore if you use
+  LazyExtras
+- ltex-ls. grammar-guard.nvim and ltex_extra.nvim which can also do markdown,
+  but the spell check is just insanely wordy. I use the standard spell checker
+  instead
+- ltex vs markman. These support both markdown (and ltex does Latex too and is very
+  wordy with spell check
 
-Note that you can see everything loaded with `:Mason`
+## The confusion which is Python and Debugging
 
-Competing ones:
+As usual Python has an amazing host of overlapping LSPs and tools but the two
+that are in conflict are pyright the default and ruff which is what I want to
+use. There are two tricks here, first you have to make sure pyright doesn't run
+and then you have to set a million ruff options
+
+Competing ones which I don't use:
 
 - jedi. This is the original LSP that I've used before, you get this as a full
   LSP `jedi_lanaguage_server` but ruff seems better
-- ltex vs markman. These support both markdown (and ltex does Latex too and is very
-  wordy with spell check
 - russ vs pyright. Ruff is faster as it is written in rust and is a superset of
   pyright. Since pyright is native to LazyVim, you have to explicitly disable
   it. Right now I leave it on.
+- russ configuration. Note that you have this special dictionary called settings
+  init_options > setting before you get to the meat. And they you have a million
+  lint settings. I have this turned way up including documentation checks.
 
 ```lua
 {
@@ -465,10 +475,47 @@ Competing ones:
   opts = {
     servers = {
       pyright = { mason = false, autostart = false},
-      ruff = {}
+      ruff = {
+        init_options = {
+          settings = {
+            lineLength = 88, -- black replacement and 88 is now default
+            organizeImports = true, -- isort replacement
+            lint = {
+              select = {
+                "F", -- pyright
+                "E", -- pycodestyle
+                "W", -- pycodestyle warnings
+                "C", -- mccabe code complexity
+                "I", -- isort
+                "N", -- PEP8 naming
+                "D", -- pydocstyle docstrings
+                "UP", -- pyupgrade
+                "YTT", -- flake8-2020
+                "ANN", -- flake8-annotations
+                "S", -- flake8-bandit
+                "FBT", -- flake8-boolean-trap
+                "B", -- flake8-bugbear
+                "A", -- flake8-builtin showing
+                "COM", -- flake8-commas missing
+                "C4", -- flake8-comprehensions simplification
+                "DTZ", -- flake8-datetimez errors
+                "EM", -- flake8-errmsg
+                "EXE", -- flake8-executalbe
+                "PTH", -- flake8-use-pathlib no os.path
+                "PD", -- pandas-vet
+                "PL", -- pylint refactor, warn, errors
+                "NPY", -- numpy
+                "PERF", -- perflint
+                "DOC", -- pydoclint
+                "RUF", -- ruff specific rules
+              },
+            },
+          },
+        },
+      },
     },
-  }
-}
+  },
+},
 ```
 
 These could compete with vtsls:
@@ -532,6 +579,14 @@ pyproject.toml and then turn on pre-commit so that you have the same test.
           },
         },
 ```
+
+## Python Debugging with nvim-dap
+
+Wow this is super powerful, but if you start python, then if you <leader>d you
+will get a debugging window and if you do a \dC, it will stop at the current
+Python line. \dr starts a REPL and \da starts with arguments.
+
+I was getting some type of run time error, but definitely worth figuing out.
 
 ## Completions vs LSP vs Linting vs Formatting
 

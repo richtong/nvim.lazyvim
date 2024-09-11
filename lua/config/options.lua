@@ -32,3 +32,6 @@ vim.opt.textwidth = 80
 -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- override here
 -- vim.g.autoformat = false
+
+-- https://www.lazyvim.org/extras/lang/python
+-- confusing how to enable the right ruff vs pyright
