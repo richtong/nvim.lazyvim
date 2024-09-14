@@ -30,8 +30,7 @@ vim.opt.textwidth = 80
 -- https://github.com/LazyVim/LazyVim/discussions/141
 -- set in
 -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- override here
+-- override her
 -- vim.g.autoformat = false
 
--- https://www.lazyvim.org/extras/lang/python
--- confusing how to enable the right ruff vs pyright
+vim.g.mkdp_browser = "firefox"
