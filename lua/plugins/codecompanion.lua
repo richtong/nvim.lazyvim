@@ -2,17 +2,30 @@
 -- vim.env.OPENAP_API_KEY
 -- vim.env.ANTHROPIC_API_KEY
 -- https://github.com/olimorris/codecompanion.nvim
+
+-- Your CodeCompanion setup
 return {
-  "olimorris/codecompanion.nvim",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
-    {
-      "stevearc/dressing.nvim", -- Optional: Improves the default Neovim UI
-      opts = {},
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+      { "nvim-lua/plenary.nvim" },
+      { "hrsh7th/nvim-cmp" },
+      { "stevearc/dressing.nvim", opts = {} },
+      { "nvim-telescope/telescope.nvim" },
     },
-    "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
+    opts = {
+      --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+      strategies = {
+        --NOTE: Change the adapter as required
+        chat = { adapter = "openai" },
+        inline = { adapter = "openai" },
+        agent = { adapter = "openai" },
+      },
+      opts = {
+        log_level = "DEBUG",
+      },
+    },
+    config = true,
   },
-  config = true,
 }
