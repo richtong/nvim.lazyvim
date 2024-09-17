@@ -17,7 +17,6 @@ return {
     opts = {
       --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
       strategies = {
-        --NOTE: Change the adapter as required
         chat = { adapter = "openai" },
         inline = { adapter = "openai" },
         agent = { adapter = "openai" },
