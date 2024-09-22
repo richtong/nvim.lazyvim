@@ -14,17 +14,19 @@ return {
       { "stevearc/dressing.nvim", opts = {} },
       { "nvim-telescope/telescope.nvim" },
     },
-    opts = {
-      --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
-      strategies = {
-        chat = { adapter = "openai" },
-        inline = { adapter = "openai" },
-        agent = { adapter = "openai" },
-      },
-      opts = {
-        log_level = "DEBUG",
-      },
-    },
+    -- this stuff should be in the options aread not install
+    -- opts = {
+    --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+    --adapters = { "anthropic", "openai", "gemini", "ollama", "copilot" },
+    --   strategies = {
+    --     chat = { adapter = "ollama" },
+    --     inline = { adapter = "ollama" },
+    --     agent = { adapter = "openai" },
+    --   },
+    --   opts = {
+    --     log_level = "DEBUG",
+    --   },
+    -- },
     config = true,
   },
 }

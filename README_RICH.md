@@ -7,9 +7,31 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
+- [ ] If there is a plugin which is not part of LazyVim, be very careful about
+      adding it, you should study the Keymaps to make sure you should disable
+      something. For instance [Code Companion](https://github.com/olimorris/codecompanion.nvim) then it wants to use <C-A>
+      </C-A> and you can see this is also used by Dial, but Dial also supports g<C-A>
+      so you should be OK. It also wants to use <Leader>a for Toggle and ga for Code
+      companion Add
+- [x] Keys can collide so gs is used by leap to leap from windows and by
+      surround which uses this instead of sa which is just for navigating. Disable
+      leap to use surround. These things are not documented, but you can figure it out
+      by looking at [Lazy Keymaps](https://www.lazyvim.org/keymaps) and search fro
+      commands. Although there is a what does it do, for things like <Leader>, there
+      is nothing for single key stuff like this and the help is wrong, so when
+      loading surround and leap, the what is it thingy still thinks it is surround.
+      There is the `:map` command that tells you want is active as well, so if you
+      search for `gs` you can see it says Leap from Windows
 - [ ] Schemastore does not seem to work with Yaml, but manually insert does for
       mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate
       it
+- [ ] Lua pragmas do not work and generate errors, does luarocks need to be
+      installed
+- [ ] MarkdownPreview gives an error message
+- [ ] do not put things like debugging in ./lua/config because it reads all
+      those files and if you have multipe setup() calls it fails, put them in
+      ./lua/debug or somewhere else so lazyvim does not get confused. The error is
+      very confusing, it whines about setup not found
 - [x] Even with auto wordwrap it does not use gww or gw} for now for
       markdown. Need to set vim.opt.wrap=true in config.lua to make word wrap
       work correctly

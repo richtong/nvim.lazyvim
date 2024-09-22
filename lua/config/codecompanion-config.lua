@@ -1,8 +1,55 @@
--- this does not work in options.lua because setup is not there, so how do you
--- do this with lazyvim
--- https://github.com/olimorris/codecompanion.nvim?tab=readme-ov-file#gear-configuration
--- three ways to get keys
+-- the default setup is here so do this to make changes
+-- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+-- see https://github.com/olimorris/codecompanion.nvim/tree/main/lua/codecompanion/adapters
+-- for their code
+-- Adapters use this interface https://github.com/olimorris/codecompanion.nvim/blob/main/doc/ADAPTERS.md
 require("codecompanion").setup({
+  display = {
+    diff = {
+      -- mini-diff part of LazyExtras
+      provider = "mini-diff",
+    },
+  },
+  opts = {
+    log_level = "DEBUG",
+  },
+  strategies = {
+    chat = {
+      -- These are local ollama
+      adapter = "qwen2.5_coder",
+      -- These all work below
+      -- adapter = "llama3-70b",
+      -- adapter = "ollama",
+      -- adapter = "gemini",
+      -- adapter = "openai",
+      -- adapter = "anthropic",
+      -- adapter = "copilot",
+    },
+    inline = {
+      adapter = "qwen2.5_coder",
+      -- adapter = "llama3-70b",
+      -- adapter = "ollama",
+      -- adapter = "gemini",
+      -- adapter = "openai",
+      -- adapter = "anthropic",
+    },
+    agent = {
+      adapter = "qwen2.5_coder",
+      -- adapter = "llama3-70b",
+      -- adapter = "ollama",
+      -- adapter = "gemini",
+      -- adapter = "anthropic",
+      -- adapter = "openai",
+    },
+  },
+  -- Use schema.model to change the default model used by the adapters
+  -- https://github.com/olimorris/codecompanion.nvim/tree/main
+  -- https://platform.openai.com/docs/models
+  -- "gpt-4"
+  -- "gpt-4o"
+  -- "gpt-4o mini"
+  -- "o1-preview"
+  -- "o1-mini"
   adapters = {
     openai = function()
       return require("codecompanion.adapters").extend("openai", {
@@ -15,6 +62,62 @@ require("codecompanion").setup({
           -- If in the environment this is fastest
           api_key = vim.env.OPENAI_API_KEY,
         },
+        schema = {
+          model = {
+            default = "o1-preview",
+          },
+        },
+      })
+    end,
+
+    -- ollama list shows these models,
+    -- mistral-large:latest
+    -- yi-coder:latest
+    -- deepseek-v2.5:latest
+    -- reader-lm:latest
+    -- bespoke-minicheck:latest
+    -- llama3.1:70b-instruct-q4_0
+    -- starcoder2:latest
+    -- nemotron-mini:latest
+    -- qwen2.5-coder:latest
+    -- phi3.5:latest
+    -- qwen2.5:latest
+    -- gemma2:latest
+    -- llama3.1:8b-text-q4_0
+    -- llama3.1:latest
+    -- this overrides the default ollama definition which looks like it finds
+    -- the first model in the list that comes back from ollama
+    -- which is the last model that was pulled by ollama pull
+    -- this overrides that use llama3.1
+    ollama = function()
+      return require("codecompanion.adapters").extend("ollama", {
+        schema = {
+          model = {
+            default = "llama3.1",
+          },
+        },
+      })
+    end,
+    -- https://github.com/olimorris/codecompanion.nvim/tree/main/doc/ADAPTERS.md
+    -- To create more adapaters that have specific default models
+    llama31_70b = function()
+      return require("codecompanion.adapters").extend("ollama", {
+        name = "llama3-70b",
+        schema = {
+          model = {
+            default = "llama3.1:70b-instruct-q4_0",
+          },
+        },
+      })
+    end,
+    qwen25_coder = function()
+      return require("codecompanion.adapters").extend("ollama", {
+        name = "qwen25_coder",
+        schema = {
+          model = {
+            default = "qwen2.5-coder",
+          },
+        },
       })
     end,
     anthropic = function()
@@ -24,6 +127,29 @@ require("codecompanion").setup({
           -- api_key = 'cmd:op item get "Anthropic API Key Dev" --fields "api key" --reveal',
           -- -- depends on an environment variable
           api_key = "vim.env.ANTHROPIC_API_KEY",
+        },
+        schema = {
+          model = {
+            -- https://docs.anthropic.com/en/docs/about-claude/models
+            -- "claude-3-5-sonnet-20240620"
+            default = "claude-3-5-sonnet-20240620",
+          },
+        },
+      })
+    end,
+    -- https://ai.google.dev/gemini-api/docs/models/gemini
+    gemini = function()
+      return require("codecompanion.adapters").extend("gemini", {
+        env = {
+          -- api_key = 'cmd:op item get "Google Gemini API Key Dev" --fields "api key" --reveal',
+          api_key = "vim.env.GEMINI_API_KEY",
+        },
+        schema = {
+          model = {
+            -- gemini-1.5-flash
+            -- gemin-1.5-pro
+            default = "gemini-1.5-pro",
+          },
         },
       })
     end,
