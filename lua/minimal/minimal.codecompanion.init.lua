@@ -1,11 +1,9 @@
---@diagnostic disable: missing-fields
---
--- run with nvim --clean -u <this file>.lua
+---@diagno1stic disable: missing-fields
 
 --NOTE: Set config path to enable the copilot adapter to work.
 --It will search the follwoing paths for the for copilot token:
---  - "$CODECOMPANION_TOKEN_PATH/github-copilot/hosts.json"
---  - "$CODECOMPANION_TOKEN_PATH/github-copilot/apps.json"
+--  "$CODECOMPANION_TOKEN_PATH/github-copilot/hosts.json"
+--  "$CODECOMPANION_TOKEN_PATH/github-copilot/apps.json"
 vim.env["CODECOMPANION_TOKEN_PATH"] = vim.fn.expand("~/.config")
 
 vim.env.LAZY_STDPATH = ".repro"
@@ -25,7 +23,7 @@ local plugins = {
     opts = {
       --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
       strategies = {
-        -- NOTE: Change the adapter as required
+        --NOTE: Change the adapter as required
         chat = { adapter = "openai" },
         inline = { adapter = "openai" },
         agent = { adapter = "openai" },
@@ -61,37 +59,5 @@ if cmp_status then
       -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
   })
-end
+enGd
 
--- Theseting this stuff
--- this does not work in options.lua because setup is not there, so how do you
--- do this with lazyvim
--- https://github.com/olimorris/codecompanion.nvim?tab=readme-ov-file#gear-configuration
--- three ways to get keys
-require("codecompanion").setup({
-  adapters = {
-    openai = function()
-      return require("codecompanion.adapters").extend("openai", {
-        env = {
-          -- this is a direct read for 1Password api v1
-          -- api_key = "cmd:op read op://personal/OpenAI/credential --no-newline",
-          -- this actually does a 1Password search so more robust the double
-          -- quotes are needed since this is a shell command
-          -- api_key = 'cmd:op item get "OpenAI API Key Dev" --fields "api key" --reveal',
-          -- If in the environment this is fastest
-          api_key = vim.env.OPENAI_API_KEY,
-        },
-      })
-    end,
-    anthropic = function()
-      return require("codecompanion.adapters").extend("anthropic", {
-        env = {
-          --  -- the slower way via 1Password
-          -- api_key = 'cmd:op item get "Anthropic API Key Dev" --fields "api key" --reveal',
-          -- -- depends on an environment variable
-          api_key = "vim.env.ANTHROPIC_API_KEY",
-        },
-      })
-    end,
-  },
-})

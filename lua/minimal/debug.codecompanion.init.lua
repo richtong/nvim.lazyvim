@@ -1,40 +1,54 @@
--- https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
--- vim.env.OPENAP_API_KEY
--- vim.env.ANTHROPIC_API_KEY
--- https://github.com/olimorris/codecompanion.nvim
+---@diagno1stic disable: missing-fields
+
+--NOTE: Set config path to enable the copilot adapter to work.
+--It will search the follwoing paths for the for copilot token:
+--  "$CODECOMPANION_TOKEN_PATH/github-copilot/hosts.json"
+--  "$CODECOMPANION_TOKEN_PATH/github-copilot/apps.json"
+vim.env["CODECOMPANION_TOKEN_PATH"] = vim.fn.expand("~/.config")
+
+vim.env.LAZY_STDPATH = ".repro"
+load(vim.fn.system("curl -s https://raw.githubusercontent.com/folke/lazy.nvim/main/bootstrap.lua"))()
 
 -- Your CodeCompanion setup
-return {
+local plugins = {
   {
     "olimorris/codecompanion.nvim",
     dependencies = {
-      -- { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "hrsh7th/nvim-cmp",
-      "nvim-telescope/telescope.nvim",
+      { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+      { "nvim-lua/plenary.nvim" },
+      { "hrsh7th/nvim-cmp" },
       { "stevearc/dressing.nvim", opts = {} },
+      { "nvim-telescope/telescope.nvim" },
     },
-    config = true,
-    -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
-    -- see https://github.com/olimorris/codecompanion.nvim/tree/main/lua/codecompanion/adapters
-    -- Adapters use this interface https://github.com/olimorris/codecompanion.nvim/blob/main/doc/ADAPTERS.md
-    -- the double opts is not a typo, in LazyVim the entire opts is fed to
-    -- require("codecompanion").setup
     opts = {
+      --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
       opts = {
         log_level = "DEBUG",
       },
+
+      -- codecompanion
+      -- run with nvim --clear -u
+      -- the default setup is here so do this to make changes
+      -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+      -- see https://github.com/olimorris/codecompanion.nvim/tree/main/lua/codecompanion/adapters
+      -- r
+      -- Adapters use this interface https://github.com/olimorris/codecompanion.nvim/blob/main/doc/ADAPTERS.md
       display = {
         diff = {
           -- mini-diff part of LazyExtras
           provider = "mini-diff",
         },
       },
+      -- strategies = {
+      --   --NOTE: Change the adapter as required
+      --   chat = { adapter = "openai" },
+      --   inline = { adapter = "openai" },
+      --   agent = { adapter = "openai" },
+      -- },
       strategies = {
         chat = {
-          adapter = "qwen25_coder",
-          -- adapter = "llama31_70b",
+          -- adapter = "qwen25_coder",
+          adapter = "llama31_70b",
           -- adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
@@ -42,16 +56,16 @@ return {
           -- adapter = "openai",
         },
         inline = {
-          adapter = "qwen25_coder",
-          -- adapter = "llama31_70b",
+          -- adapter = "qwen25_coder",
+          adapter = "llama31_70b",
           -- adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
           -- adapter = "openai",
         },
         agent = {
-          adapter = "qwen25_coder",
-          -- adapter = "llama31_70b",
+          -- adapter = "qwen25_coder",
+          adapter = "llama31_70b",
           -- adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
@@ -121,17 +135,17 @@ return {
         -- To create more adapaters that have specific default models
         llama31_70b = function()
           return require("codecompanion.adapters").extend("ollama", {
-            name = "llama3.1:70b",
+            name = "llama31_70b",
             schema = {
               model = {
-                default = "llama3.1:70b",
+                default = "llama3.1:70b-instruct-q4_0",
               },
             },
           })
         end,
         qwen25_coder = function()
           return require("codecompanion.adapters").extend("ollama", {
-            name = "qwen2.5-coder",
+            name = "qwen25_coder",
             schema = {
               model = {
                 default = "qwen2.5-coder",
@@ -175,3 +189,29 @@ return {
     },
   },
 }
+
+require("lazy.minit").repro({ spec = plugins })
+
+-- Setup Tree-sitter
+local ts_status, treesitter = pcall(require, "nvim-treesitter.configs")
+if ts_status then
+  treesitter.setup({
+    ensure_installed = { "lua", "markdown", "markdown_inline", "yaml" },
+    highlight = { enable = true },
+  })
+end
+
+-- Setup completion
+local cmp_status, cmp = pcall(require, "cmp")
+if cmp_status then
+  cmp.setup({
+    mapping = cmp.mapping.preset.insert({
+      ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+      ["<C-f>"] = cmp.mapping.scroll_docs(4),
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-e>"] = cmp.mapping.abort(),
+      ["<CR>"] = cmp.mapping.confirm({ select = true }),
+      -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+  })
+end

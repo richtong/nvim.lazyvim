@@ -13,10 +13,23 @@ to try to just get the LazyVim Starter working
       installed
 - [x] MarkdownPreview gives an error message. This is because lazy loading was
       not implemented should be fixed in next release of lazyvim
+- [x] debugging this is equally strange. You should create a minimal directory
+      in the lua area. Do not put these into ./plugins as it will mask the items.
+      These should have the full requier(_plugin_).setup() in them and then you run
+      with with `nvim --clean -u _name of minimal lua init file.lua`
+- [x] The confusion that is config files. The first thing is that most neovim
+      plugins says you should do a `require("_plugin_name").setup()` to get setup to
+      run but this is not how LazyVim works. What you need to do is just put in the a
+      dictionary item with the name of the plugin and then all the setup options into
+      the
+      string into the `opts` item that is passed to setup into a .lua file in
+      [./lua/plugins](./lua/plugins/). This is because LazyVim is special it reads all
+      the .lua files in the plugins folder and finds the name of the plugin, then
+      executes the setup function with whatever is in the opts dictionary item.
 - [x] Code companion is [cool](https://github.com/olimorris/codecompanion.nvim)
-      because it lets you load all different models. The require is pretty
-      complicated but basicaly you create functions which extend the core adapters
-      See the codecompletion options for details.
+      because it lets you load all different models. The require is pretty complicated
+      but basicaly you create functions which extend the core adapters See the
+      codecompletion options for details.
 - [x] If there is a plugin which is not part of LazyVim, be very careful about
       adding it, you should study the Keymaps to make sure you should disable
       something. For instance [Code
@@ -26,13 +39,13 @@ to try to just get the LazyVim Starter working
       Code companion Add
 - [x] Keys can collide so gs is used by leap to leap from windows and by
       surround which uses this instead of sa which is just for navigating. Disable
-      leap to use surround. These things are not documented, but you can figure
-      it out by looking at [Lazy Keymaps](https://www.lazyvim.org/keymaps) and search
-      fro commands. Although there is a what does it do, for things like <Leader>,
-      there is nothing for single key stuff like this and the help is wrong, so when
-      loading surround and leap, the what is it thingy still thinks it is surround.
-      There is the `:map` command that tells you want is active as well, so if you
-      search for `gs` you can see it says Leap from Windows
+      leap to use surround. These things are not documented, but you can figure it out
+      by looking at [Lazy Keymaps](https://www.lazyvim.org/keymaps) and search fro
+      commands. Although there is a what does it do, for things like <Leader>, there
+      is nothing for single key stuff like this and the help is wrong, so when loading
+      surround and leap, the what is it thingy still thinks it is surround. There is
+      the `:map` command that tells you want is active as well, so if you search for
+      `gs` you can see it says Leap from Windows
 - [x] do not put things like debugging in ./lua/config because it reads all
       those files and if you have multipe setup() calls it fails, put them in
       ./lua/debug or somewhere else so lazyvim does not get confused. The error is
