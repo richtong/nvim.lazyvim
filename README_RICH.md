@@ -7,54 +7,59 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
-- [ ] If there is a plugin which is not part of LazyVim, be very careful about
+- [ ] Schemastore does not seem to work with Yaml, but manually insert does for
+      mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate it
+- [ ] Lua pragmas do not work and generate errors, does luarocks need to be
+      installed
+- [x] MarkdownPreview gives an error message. This is because lazy loading was
+      not implemented should be fixed in next release of lazyvim
+- [x] Code companion is [cool](https://github.com/olimorris/codecompanion.nvim)
+      because it lets you load all different models. The require is pretty
+      complicated but basicaly you create functions which extend the core adapters
+      See the codecompletion options for details.
+- [x] If there is a plugin which is not part of LazyVim, be very careful about
       adding it, you should study the Keymaps to make sure you should disable
-      something. For instance [Code Companion](https://github.com/olimorris/codecompanion.nvim) then it wants to use <C-A>
-      </C-A> and you can see this is also used by Dial, but Dial also supports g<C-A>
-      so you should be OK. It also wants to use <Leader>a for Toggle and ga for Code
-      companion Add
+      something. For instance [Code
+      Companion](https://github.com/olimorris/codecompanion.nvim) then it wants to use
+      <C-A> </C-A> and you can see this is also used by Dial, but Dial also supports
+      g<C-A> so you should be OK. It also wants to use <Leader>a for Toggle and ga for
+      Code companion Add
 - [x] Keys can collide so gs is used by leap to leap from windows and by
       surround which uses this instead of sa which is just for navigating. Disable
-      leap to use surround. These things are not documented, but you can figure it out
-      by looking at [Lazy Keymaps](https://www.lazyvim.org/keymaps) and search fro
-      commands. Although there is a what does it do, for things like <Leader>, there
-      is nothing for single key stuff like this and the help is wrong, so when
+      leap to use surround. These things are not documented, but you can figure
+      it out by looking at [Lazy Keymaps](https://www.lazyvim.org/keymaps) and search
+      fro commands. Although there is a what does it do, for things like <Leader>,
+      there is nothing for single key stuff like this and the help is wrong, so when
       loading surround and leap, the what is it thingy still thinks it is surround.
       There is the `:map` command that tells you want is active as well, so if you
       search for `gs` you can see it says Leap from Windows
-- [ ] Schemastore does not seem to work with Yaml, but manually insert does for
-      mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate
-      it
-- [ ] Lua pragmas do not work and generate errors, does luarocks need to be
-      installed
-- [ ] MarkdownPreview gives an error message
-- [ ] do not put things like debugging in ./lua/config because it reads all
+- [x] do not put things like debugging in ./lua/config because it reads all
       those files and if you have multipe setup() calls it fails, put them in
       ./lua/debug or somewhere else so lazyvim does not get confused. The error is
       very confusing, it whines about setup not found
-- [x] Even with auto wordwrap it does not use gww or gw} for now for
-      markdown. Need to set vim.opt.wrap=true in config.lua to make word wrap
-      work correctly
-- [x] figuring out finding, so \e starts neotree in a window
-      while \f starts Telescope in a modal dialog box
-- [x] shell script using bashls but also need shellcheck for linting and
-      shfmt for linting which Mason installs Bashls discovers these. [bashls](https://github.com/bash-lsp/bash-language-server)
+- [x] Even with auto wordwrap it does not use gww or gw} for now for markdown.
+      Need to set vim.opt.wrap=true in config.lua to make word wrap work correctly
+- [x] figuring out finding, so \e starts neotree in a window while \f starts
+      Telescope in a modal dialog box
+- [x] shell script using bashls but also need shellcheck for linting and shfmt
+      for linting which Mason installs Bashls discovers these.
+      [bashls](https://github.com/bash-lsp/bash-language-server)
 - [x] Word wrap with gww, but autoformat is off in options.lua put in
       vim.g.autoformat (g means global)
-- [x] Ruff vs pyright for python to get completions, pydocstyles force and
-      black or just use pyright. Ruff with the right setting emulates all
-      pydocstyles by enable the 'E' for pycodestyle, 'F' for pyright, 'I' for
-      isort. Leaving pyright on for right now.
-- [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg
-      or or you can use ltex for more advanced stuff and is way busier
-- [x] Font does not show correct glyphs looks like this is the lsp. Need to
-      brew install the font and then make sure that iterm2 profile uses it in `iTerm2
-| Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
+- [x] Ruff vs pyright for python to get completions, pydocstyles force and black
+      or just use pyright. Ruff with the right setting emulates all pydocstyles by
+      enable the 'E' for pycodestyle, 'F' for pyright, 'I' for isort. Leaving pyright
+      on for right now.
+- [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg or
+      or you can use ltex for more advanced stuff and is way busier
+- [x] Font does not show correct glyphs looks like this is the lsp. Need to brew
+      install the font and then make sure that iterm2 profile uses it in `iTerm2 |
+Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
       You should load nerd fonts as these have all the glyphs you need. The Usable
       fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
 - [x] Automatic word wrapping is \uw or in options.lua put in vim.opt.wrap=true
-      this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps
-      to the next empty space
+      this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps to
+      the next empty space
 - [x] Change vim.g.mapleader = "\\" in ./lua/config/options.lua
 - [x] Change to solarized, edit ./lua/plugins/base.lua add the .nvim file,
       options does not want the .nvim suffix

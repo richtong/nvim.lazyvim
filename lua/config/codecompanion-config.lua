@@ -4,42 +4,40 @@
 -- for their code
 -- Adapters use this interface https://github.com/olimorris/codecompanion.nvim/blob/main/doc/ADAPTERS.md
 require("codecompanion").setup({
+  opts = {
+    log_level = "DEBUG",
+  },
   display = {
     diff = {
       -- mini-diff part of LazyExtras
       provider = "mini-diff",
     },
   },
-  opts = {
-    log_level = "DEBUG",
-  },
   strategies = {
     chat = {
-      -- These are local ollama
-      adapter = "qwen2.5_coder",
-      -- These all work below
+      -- adapter = "qwen2.5_coder",
       -- adapter = "llama3-70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
-      -- adapter = "openai",
       -- adapter = "anthropic",
       -- adapter = "copilot",
+      adapter = "openai",
     },
     inline = {
-      adapter = "qwen2.5_coder",
+      -- adapter = "qwen2.5_coder",
       -- adapter = "llama3-70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
-      -- adapter = "openai",
       -- adapter = "anthropic",
+      adapter = "openai",
     },
     agent = {
-      adapter = "qwen2.5_coder",
+      -- adapter = "qwen2.5_coder",
       -- adapter = "llama3-70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
       -- adapter = "anthropic",
-      -- adapter = "openai",
+      adapter = "openai",
     },
   },
   -- Use schema.model to change the default model used by the adapters
@@ -98,6 +96,10 @@ require("codecompanion").setup({
         },
       })
     end,
+    -- TODO
+    -- to do https://github.com/olimorris/codecompanion.nvim/discussions/113
+    -- add the deepseek free hosted model
+    --
     -- https://github.com/olimorris/codecompanion.nvim/tree/main/doc/ADAPTERS.md
     -- To create more adapaters that have specific default models
     llama31_70b = function()
@@ -154,4 +156,3 @@ require("codecompanion").setup({
       })
     end,
   },
-})
