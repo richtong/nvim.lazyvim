@@ -1,7 +1,6 @@
 -- the default setup is here so do this to make changes
 -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
 -- see https://github.com/olimorris/codecompanion.nvim/tree/main/lua/codecompanion/adapters
--- for their code
 -- Adapters use this interface https://github.com/olimorris/codecompanion.nvim/blob/main/doc/ADAPTERS.md
 require("codecompanion").setup({
   opts = {
@@ -15,29 +14,29 @@ require("codecompanion").setup({
   },
   strategies = {
     chat = {
-      -- adapter = "qwen2.5_coder",
-      -- adapter = "llama3-70b",
+      -- adapter = "qwen25_coder",
+      adapter = "llama3_70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
       -- adapter = "anthropic",
       -- adapter = "copilot",
-      adapter = "openai",
+      -- adapter = "openai",
     },
     inline = {
-      -- adapter = "qwen2.5_coder",
-      -- adapter = "llama3-70b",
+      -- adapter = "qwen25_coder",
+      adapter = "llama3_70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
       -- adapter = "anthropic",
-      adapter = "openai",
+      -- adapter = "openai",
     },
     agent = {
-      -- adapter = "qwen2.5_coder",
-      -- adapter = "llama3-70b",
+      -- adapter = "qwen25_coder",
+      adapter = "llama3_70b",
       -- adapter = "ollama",
       -- adapter = "gemini",
       -- adapter = "anthropic",
-      adapter = "openai",
+      -- adapter = "openai",
     },
   },
   -- Use schema.model to change the default model used by the adapters
@@ -67,7 +66,6 @@ require("codecompanion").setup({
         },
       })
     end,
-
     -- ollama list shows these models,
     -- mistral-large:latest
     -- yi-coder:latest
@@ -104,7 +102,7 @@ require("codecompanion").setup({
     -- To create more adapaters that have specific default models
     llama31_70b = function()
       return require("codecompanion.adapters").extend("ollama", {
-        name = "llama3-70b",
+        name = "llama3_70b",
         schema = {
           model = {
             default = "llama3.1:70b-instruct-q4_0",
@@ -133,7 +131,7 @@ require("codecompanion").setup({
         schema = {
           model = {
             -- https://docs.anthropic.com/en/docs/about-claude/models
-            -- "claude-3-5-sonnet-20240620"
+            -- default = "claude-3-5-sonnet-20240620"
             default = "claude-3-5-sonnet-20240620",
           },
         },
@@ -148,11 +146,11 @@ require("codecompanion").setup({
         },
         schema = {
           model = {
-            -- gemini-1.5-flash
-            -- gemin-1.5-pro
+            -- default = "gemini-1.5-flash"
             default = "gemini-1.5-pro",
           },
         },
       })
     end,
   },
+}
