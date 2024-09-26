@@ -102,7 +102,6 @@ local plugins = {
         -- ollama list shows these models,
         -- mistral-large:latest
         -- yi-coder:latest
-        -- deepseek-v2.5:latest
         -- reader-lm:latest
         -- bespoke-minicheck:latest
         -- llama3.1:70b-instruct-q4_0
@@ -127,10 +126,6 @@ local plugins = {
             },
           })
         end,
-        -- TODO
-        -- to do https://github.com/olimorris/codecompanion.nvim/discussions/113
-        -- add the deepseek free hosted model
-        --
         -- https://github.com/olimorris/codecompanion.nvim/tree/main/doc/ADAPTERS.md
         -- To create more adapaters that have specific default models
         llama31_70b = function()

@@ -33,26 +33,26 @@ return {
       },
       strategies = {
         chat = {
-          adapter = "qwen25_coder",
+          -- adapter = "qwen25_coder",
           -- adapter = "llama31_70b",
-          -- adapter = "ollama",
+          adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
           -- adapter = "copilot",
           -- adapter = "openai",
         },
         inline = {
-          adapter = "qwen25_coder",
+          -- adapter = "qwen25_coder",
           -- adapter = "llama31_70b",
-          -- adapter = "ollama",
+          adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
           -- adapter = "openai",
         },
         agent = {
-          adapter = "qwen25_coder",
+          -- adapter = "qwen25_coder",
           -- adapter = "llama31_70b",
-          -- adapter = "ollama",
+          adapter = "ollama",
           -- adapter = "gemini",
           -- adapter = "anthropic",
           -- adapter = "openai",
@@ -67,6 +67,77 @@ return {
       -- "o1-preview"
       -- "o1-mini"
       adapters = {
+        -- https://console.groq.com/docs/quickstart
+        -- because groq is also openai api compliant
+        groq = function()
+          return require("codecompanion.adapters").extend("openai", {
+            env = {
+              api_key = vim.env.GROQ_API_KEY,
+            },
+            name = "Groq",
+            url = "https://api.groq.com/openai/v1/chat/completions",
+            schema = {
+              model = {
+                default = "llama3.2-11-text-preview",
+                -- https://console.groq.com/docs/models
+                choices = {
+                  "distil-whisper-large-v3-en",
+                  "whisper-large-v3",
+                  "gemma2-9b-it",
+                  "gemma-7b-it",
+                  "llama3-groq-70b-8192-tool-use-preview",
+                  "llama3-groq-8b-8192-tool-use-preview",
+                  -- 132K context
+                  "llama-3.1-70b-versatile",
+                  -- 128K native but only 8k tokens now
+                  "llama-3.2-1b-preview",
+                  "llama-3.2-11b-text-preview",
+                  "llama-3.2-3b-preview",
+                  "llama-3.2-11b-text-preview",
+                  "llama-3.2-90b-text-preview",
+                  "llama-guard-3-8b",
+                  "llava-v1.5-7b-4096-preview",
+                },
+              },
+            },
+            max_tokens = {
+              default = 8192,
+            },
+            temperature = {
+              default = 1,
+            },
+          })
+        end,
+        -- https://github.com/olimorris/codecompanion.nvim/discussions/113
+        -- deepseek emulates the openai api so you can just openai adapter
+        deepseek25 = function()
+          return require("codecompanion.adapters").extend("openai", {
+            name = "deepseek 2.5",
+            env = {
+              api_key = vim.env.DEEPSEEK_API_KEY,
+            },
+            -- 4K but beta is 8K output context, all are 128K input context
+            -- or set max_tokens = 8192
+            url = "https://api.deepseek.com/chat/completions",
+            schema = {
+              model = {
+                default = "deepseek-chat",
+              },
+              -- deepseek-coder and deepseek-chat were v2, v2.5 merges them
+              -- note that this will still present openai models as well which
+              -- doesn't work
+              choices = {
+                "deepseek-chat",
+              },
+            },
+            max_tokens = {
+              default = 8192,
+            },
+            temperature = {
+              default = 1,
+            },
+          })
+        end,
         openai = function()
           return require("codecompanion.adapters").extend("openai", {
             env = {
@@ -121,7 +192,7 @@ return {
         -- To create more adapaters that have specific default models
         llama31_70b = function()
           return require("codecompanion.adapters").extend("ollama", {
-            name = "llama3.1:70b",
+            name = "llama 3.1 70b",
             schema = {
               model = {
                 default = "llama3.1:70b",
@@ -145,7 +216,7 @@ return {
               --  -- the slower way via 1Password
               -- api_key = 'cmd:op item get "Anthropic API Key Dev" --fields "api key" --reveal',
               -- -- depends on an environment variable
-              api_key = "vim.env.ANTHROPIC_API_KEY",
+              api_key = vim.env.ANTHROPIC_API_KEY,
             },
             schema = {
               model = {
@@ -160,8 +231,8 @@ return {
         gemini = function()
           return require("codecompanion.adapters").extend("gemini", {
             env = {
-              -- api_key = 'cmd:op item get "Google Gemini API Key Dev" --fields "api key" --reveal',
-              api_key = "vim.env.GEMINI_API_KEY",
+              -- api_key = 'cmd:op item get "Google Gemini API Key Dev" --fields "api otken" --reveal',
+              api_key = vim.env.GEMINI_API_TOKEN,
             },
             schema = {
               model = {

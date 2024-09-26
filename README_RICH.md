@@ -7,6 +7,7 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
+- [ ] Updating plugins is with `:Lazy U` but markdown preview still not updated
 - [ ] Schemastore does not seem to work with Yaml, but manually insert does for
       mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate it
 - [ ] Lua pragmas do not work and generate errors, does luarocks need to be

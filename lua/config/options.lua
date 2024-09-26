@@ -17,8 +17,9 @@ vim.g.mapleader = "\\"
 
 -- https://github.com/LazyVim/LazyVim/discussions/1959
 -- this should normally be set dynamically with \uw
--- and is sensitive to
--- vim.opt.wrap = true
+-- note that this is soft wrapping, the underlying file doesn't change, but it
+-- let's you see long lines
+vim.opt.wrap = true
 
 -- http://blog.ezyang.com/2010/03/vim-textwidth/
 -- this is not documented, if you do not set them vim.g.wrap does not work
