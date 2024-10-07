@@ -27,8 +27,8 @@ return {
       },
       display = {
         diff = {
-          -- mini-diff part of LazyExtras
-          provider = "mini-diff",
+          -- mini.diff part of LazyExtras
+          provider = "mini_diff",
         },
       },
       strategies = {
@@ -67,36 +67,62 @@ return {
       -- "o1-preview"
       -- "o1-mini"
       adapters = {
+        -- //ERROR choices do not come up
+        openrouter = function()
+          return require("codecompanion.adapters").extend("openai", {
+            env = {
+              api_key = vim.env.OPENROUTER_API_KEY,
+            },
+            url = "https://openrouter.ai/api/v1/chat/completions",
+            schema = {
+              model = {
+                default = "meta-llama/llama-3.2-3b-instruct",
+                choices = {
+                  "meta-llama/llama-3.2-3b-instruct",
+                  "meta-llama/llama-3.2-1b-instruct",
+                  "meta-llama/llama-3.2-90b-vision-instruct",
+                  "meta-llama/llama-3.2-11b-vision-instruct:free",
+                  "meta-llama/llama-3.2-11b-vision-instruct",
+                  "qwen/qwen-2.5-72b-instruct",
+                  "mistral/pixtral-12b",
+                  "cohere/command-r-plus-08-2024",
+                  "ai21/jamba-21.5-large",
+                  "perplexity/llama-3.1-sonar-huge-128k-online",
+                },
+              },
+            },
+          })
+        end,
         -- https://console.groq.com/docs/quickstart
-        -- because groq is also openai api compliant
+        -- //ERROR: groq does not acced an "id" post field "name" is ok
         groq = function()
           return require("codecompanion.adapters").extend("openai", {
             env = {
               api_key = vim.env.GROQ_API_KEY,
             },
-            name = "Groq",
             url = "https://api.groq.com/openai/v1/chat/completions",
             schema = {
               model = {
-                default = "llama3.2-11-text-preview",
+                default = "llama3.2-90b-vision-preview",
                 -- https://console.groq.com/docs/models
                 choices = {
-                  "distil-whisper-large-v3-en",
-                  "whisper-large-v3",
-                  "gemma2-9b-it",
-                  "gemma-7b-it",
-                  "llama3-groq-70b-8192-tool-use-preview",
-                  "llama3-groq-8b-8192-tool-use-preview",
-                  -- 132K context
-                  "llama-3.1-70b-versatile",
-                  -- 128K native but only 8k tokens now
-                  "llama-3.2-1b-preview",
-                  "llama-3.2-11b-text-preview",
-                  "llama-3.2-3b-preview",
-                  "llama-3.2-11b-text-preview",
-                  "llama-3.2-90b-text-preview",
-                  "llama-guard-3-8b",
-                  "llava-v1.5-7b-4096-preview",
+                  "distil-whisper-large-v3-en", -- 25MB speech input
+                  "gemma2-9b-it", -- 8K context
+                  "gemma-7b-it", -- 8K context
+                  "llama3-groq-70b-8192-tool-use-preview", -- 8K context
+                  "llama3-groq-8b-8192-tool-use-preview", --8K context
+                  "llama-3.1-70b-versatile", -- 128K limited to
+                  "llama-3.1-8b-instant", -- 128K limited to 8K
+                  "llama-3.2-1b-preview", -- 128K limited to 8K
+                  "llama-3.2-3b-preview", -- 128K limited to 8K
+                  "llama-3.2-11b-vision-preview", -- 128K limited to 8K
+                  "llama-3.2-90b-vision-preview", -- 128K limited to 8K
+                  "llama-guard-3-8b", -- 8K context
+                  "llava-v1.5-7b-4096-preview", -- 4K context
+                  "llama3-70b-8192", -- 8K context
+                  "llama3-8b-8192", -- 8K context
+                  "mixtral-8x7b-32768", -- 32K token context
+                  "whisper-\alarge-v3", -- 132K context
                 },
               },
             },
@@ -105,6 +131,22 @@ return {
             },
             temperature = {
               default = 1,
+            },
+            -- new properties, zeros out those that are not there
+            -- based on https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/adapters/openai.lua
+            unsupported_props = { "id", "opts" },
+            handlers = {
+              ---@param self CodeCompanion.Adapter
+              ---@param messages table Format is: {{role="user", content="...}}
+              ---@return table
+              form_messages = function(self, messages)
+                for _, msg in pairs(messages) do
+                  for _, prop in pairs(self.unsupported_props) do
+                    msg[prop] = nil
+                  end
+                end
+                return { messages = messages }
+              end,
             },
           })
         end,
@@ -122,13 +164,13 @@ return {
             schema = {
               model = {
                 default = "deepseek-chat",
+                choices = {
+                  "deepseek-chat",
+                },
               },
               -- deepseek-coder and deepseek-chat were v2, v2.5 merges them
               -- note that this will still present openai models as well which
               -- doesn't work
-              choices = {
-                "deepseek-chat",
-              },
             },
             max_tokens = {
               default = 8192,
@@ -157,21 +199,7 @@ return {
           })
         end,
         -- ollama list shows these models,
-        -- mistral-large:latest
-        -- yi-coder:latest
-        -- deepseek-v2.5:latest
-        -- reader-lm:latest
-        -- bespoke-minicheck:latest
-        -- llama3.1:70b-instruct-q4_0
-        -- starcoder2:latest
-        -- nemotron-mini:latest
-        -- qwen2.5-coder:latest
-        -- phi3.5:latest
-        -- qwen2.5:latest
-        -- gemma2:latest
-        -- llama3.1:8b-text-q4_0
-        -- llama3.1:latest
-        -- this overrides the default ollama definition which looks like it finds
+        -- ollama autopopulates model choices
         -- the first model in the list that comes back from ollama
         -- which is the last model that was pulled by ollama pull
         -- this overrides that use llama3.1
@@ -179,17 +207,14 @@ return {
           return require("codecompanion.adapters").extend("ollama", {
             schema = {
               model = {
-                default = "llama3.1",
+                default = "llama3.2",
               },
             },
           })
         end,
-        -- TODO
         -- to do https://github.com/olimorris/codecompanion.nvim/discussions/113
-        -- add the deepseek free hosted model
-        --
-        -- https://github.com/olimorris/codecompanion.nvim/tree/main/doc/ADAPTERS.md
-        -- To create more adapaters that have specific default models
+        -- To create more adapaters that have specific default models so you do
+        -- not have to hunt down in the ollama list
         llama31_70b = function()
           return require("codecompanion.adapters").extend("ollama", {
             name = "llama 3.1 70b",

@@ -7,13 +7,25 @@ to try to just get the LazyVim Starter working
 
 ## Current problems (resolved ones)
 
-- [ ] Updating plugins is with `:Lazy U` but markdown preview still not updated
-- [ ] Schemastore does not seem to work with Yaml, but manually insert does for
-      mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate it
+- [ ] MarkdownPreview gives an error message. This is because lazy loading was
+      not implemented should be fixed in next release of lazyvim, but this not
+      clear how to load LazyVim updates..
+- [ ] Code companion is
+      [cool](https://github.com/olimorris/codecompanion.nvim) because it lets you
+      load all different models. The require is pretty complicated but basicaly you
+      create functions which extend the core adapters See the codecompletion options.
+      Not clear how to make mini.pick work should be called mini_pick, also some of
+      the adapters are broken like GROQ. Others don't parse XML correctly and Llama
+      3.1 does not understand the XML directions
+- [ ] Gww which is wrap is set at 80 characters, but wraps at 88. I changed
+      set textmargin and wrapmaring but this does not seem to be set.
+- [ ] Updating plugins is with `:Lazy U` but markdown preview still not
+      updated
+- [ ] Schemastore does not seem to work with Yaml, but manually insert does
+      for mkdocs. I can see the mkdocs.json descriptions, but not sure how to activate
+      it
 - [ ] Lua pragmas do not work and generate errors, does luarocks need to be
       installed
-- [x] MarkdownPreview gives an error message. This is because lazy loading was
-      not implemented should be fixed in next release of lazyvim
 - [x] debugging this is equally strange. You should create a minimal directory
       in the lua area. Do not put these into ./plugins as it will mask the items.
       These should have the full requier(_plugin_).setup() in them and then you run
@@ -22,15 +34,11 @@ to try to just get the LazyVim Starter working
       plugins says you should do a `require("_plugin_name").setup()` to get setup to
       run but this is not how LazyVim works. What you need to do is just put in the a
       dictionary item with the name of the plugin and then all the setup options into
-      the
-      string into the `opts` item that is passed to setup into a .lua file in
-      [./lua/plugins](./lua/plugins/). This is because LazyVim is special it reads all
-      the .lua files in the plugins folder and finds the name of the plugin, then
-      executes the setup function with whatever is in the opts dictionary item.
-- [x] Code companion is [cool](https://github.com/olimorris/codecompanion.nvim)
-      because it lets you load all different models. The require is pretty complicated
-      but basicaly you create functions which extend the core adapters See the
-      codecompletion options for details.
+      the string into the `opts` item that is passed to setup into a .lua file in
+      [./lua/plugins](./lua/plugins/). This is because LazyVim is special it reads
+      all the .lua files in the plugins folder and finds the name of the plugin, then
+      executes the setup function with whatever is in the opts dictionary item. for
+      details.
 - [x] If there is a plugin which is not part of LazyVim, be very careful about
       adding it, you should study the Keymaps to make sure you should disable
       something. For instance [Code
