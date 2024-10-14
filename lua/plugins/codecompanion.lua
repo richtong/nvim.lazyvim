@@ -26,10 +26,10 @@ return {
         log_level = "DEBUG",
       },
       display = {
-        diff = {
-          -- mini.diff part of LazyExtras
-          provider = "mini_diff",
-        },
+        -- diff = {
+        --   -- mini.diff part of LazyExtras
+        --   provider = "mini_diff",
+        -- },
       },
       strategies = {
         chat = {
@@ -67,7 +67,6 @@ return {
       -- "o1-preview"
       -- "o1-mini"
       adapters = {
-        -- //ERROR choices do not come up
         openrouter = function()
           return require("codecompanion.adapters").extend("openai", {
             env = {
@@ -78,16 +77,23 @@ return {
               model = {
                 default = "meta-llama/llama-3.2-3b-instruct",
                 choices = {
+                  "google/gemini-flash-1.5-8b", -- 1M context
+                  "liquid/lfm-40b", -- 32K context, MoE
+                  "meta-llama/llama-3.2-3b-instruct:free", -- 132K context
                   "meta-llama/llama-3.2-3b-instruct",
-                  "meta-llama/llama-3.2-1b-instruct",
-                  "meta-llama/llama-3.2-90b-vision-instruct",
+                  "meta-llama/llama-3.2-1b-instruct:free",
+                  "meta-llama/llama-3.2-1b-instruct", -- 132K context
+                  "meta-llama/llama-3.2-90b-vision-instruct", -- 128K context
                   "meta-llama/llama-3.2-11b-vision-instruct:free",
-                  "meta-llama/llama-3.2-11b-vision-instruct",
-                  "qwen/qwen-2.5-72b-instruct",
-                  "mistral/pixtral-12b",
-                  "cohere/command-r-plus-08-2024",
-                  "ai21/jamba-21.5-large",
-                  "perplexity/llama-3.1-sonar-huge-128k-online",
+                  "meta-llama/llama-3.2-11b-vision-instruct", -- 128K context
+                  "qwen/qwen-2.5-72b-instruct", -- 128K context
+                  "mistral/pixtral-12b", -- image to text 4k context
+                  "cohere/command-r-plus-08-2024", -- 128k context
+                  "cohere/command-r-08-2024", -- 128k context
+                  "ai21/jamba-21.5-large", -- 256K context mamba based
+                  "ai21/jamba-21.5-mini", -- 256K context mamba based
+                  "microsoft/phi-3.5-mini-128k-instruct", -- 128K context
+                  "perplexity/llama-3.1-sonar-huge-128k-online", -- 127K context
                 },
               },
             },
@@ -165,7 +171,7 @@ return {
               model = {
                 default = "deepseek-chat",
                 choices = {
-                  "deepseek-chat",
+                  "deepseek-chat", -- 128K context
                 },
               },
               -- deepseek-coder and deepseek-chat were v2, v2.5 merges them
@@ -173,7 +179,7 @@ return {
               -- doesn't work
             },
             max_tokens = {
-              default = 8192,
+              default = 131072,
             },
             temperature = {
               default = 1,
@@ -208,6 +214,16 @@ return {
             schema = {
               model = {
                 default = "llama3.2",
+                -- these are just for documentation
+                -- list dynamically updated from ollama server
+                -- these are the ollama pull names
+                -- Sized for 64GB M1 Mac
+                -- do not add choices here this overrides local
+                -- choices = {
+                --   "llama3.2", -- llama 3.2-3B 2GB with Q4 128k context
+                --   "llama3.2:3b-instruct-q8_0", -- llama 3.2-3B 6.4GB with Q4 128k context
+                --   "deepseek-v2", -- deepseek v2 deprecated by v2.5
+                -- },
               },
             },
           })

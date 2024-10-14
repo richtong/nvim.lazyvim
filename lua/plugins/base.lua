@@ -5,25 +5,29 @@
 -- * add extra plugins
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
+-- make sure after each to have a comma otherwise the file cuts off and you  do not get
+-- any more configurations
 return {
-  -- add gruvbox (yuck)
-  -- { "ellisonleao/gruvbox.nvim" },
-  -- top search hit for a neovim lua solarized doesn't work
-  { "craftzdog/solarized-osaka.nvim" },
-
-  { "maxmx03/solarized.nvim" },
-  -- { "b0o/SchemaStore.nvim" }, -- yaml and json standard schemas
 
   -- Configure LazyVim to load colorscheme
+  -- add gruvbox (yuck)
+  --
+  -- you can see all schemese with `:colorscheme<space><tab>`
+  { "ellisonleao/gruvbox.nvim" },
+  -- top search hit for a neovim lua solarized doesn't work
+  { "craftzdog/solarized-osaka.nvim" },
+  { "maxmx03/solarized.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
       -- make sure to leave off the .nvim suffix
-      -- colorscheme = "solarized-osaka",
+      colorscheme = "solarized-osaka",
       -- colorscheme = "gruvbox",
-      colorscheme = "solarized",
+      -- colorscheme = "solarized",
     },
   },
+
+  -- { "b0o/SchemaStore.nvim" }, -- yaml and json standard schemas
 
   -- change trouble config enable this
   {
@@ -44,6 +48,63 @@ return {
       table.insert(opts.sources, { name = "emoji" })
     end,
   },
+
+  -- markdownlint-cli2 is very annoying it defaults to 80 but we format to 88
+  -- https://www.lazyvim.org/plugins/formatting
+  -- https://github.com/LazyVim/LazyVim/discussions/1701
+  -- https://github.com/stevearc/conform.nvim
+  -- the default only sets lua, sh and fish
+  -- https://github.com/LazyVim/LazyVim/discussions/4545
+  {
+    "stevearc/conform.nvim",
+    -- @module "conform"
+    -- @type conform.setupOpts
+    opts = {
+      formatters_by_ft = {
+        css = { "prettierd", "prettier" },
+        graphql = { "prettierd", "prettier" },
+        handlebars = { "prettierd", "prettier" },
+        html = { "prettierd", "prettier" },
+        javascript = { "prettierd", "prettier" },
+        javascriptreact = { "prettierd", "prettier" },
+        json = { "prettierd", "prettier" },
+        jsonc = { "prettierd", "prettier" },
+        less = { "prettierd", "prettier" },
+        markdown = { "prettierd", "prettier" },
+        mdx = { "prettierd", "prettier" },
+        python = { "ruff" },
+        sccs = { "prettierd", "prettier" },
+        terraform_fmt = { "terraform" },
+        typescript = { "prettierd", "prettier" },
+        typescriptreact = { "prettierd", "prettier" },
+        vue = { "prettierd", "prettier" },
+        yaml = { "prettierd", "prettier" },
+      },
+    },
+  },
+  --   -- https://www.lazyvim.org/extras/formatting/prettier
+  --   -- have prettier snarf up everything it understands
+  --   opts = function(_, opts)
+  --     opts.formatters_by_ft = opts.formatters_by_ft or {}
+  --     for _, ft in ipairs(supported) do
+  --       opts.formatters_by_ft[ft] = { "prettier" }
+  --     end
+  --     opts.formatters = opts.formatters or {}
+  --     opts.formatters.prettier = {
+  --       condition = function(_, ctx)
+  --         return M.has_parser(ctx) and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx))
+  --       end,
+  --     }
+  --   end,
+  --
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.sources = opts.sources or {}
+  --     table.insert(opts.sources, nls.builtins.formatting.prettier)
+  --   end,
+  -- },
 
   -- change some telescope options and a keymap to browse plugin files
   {
@@ -260,7 +321,9 @@ return {
         "stylua",
         "shellcheck",
         "shfmt",
-        "flake8",
+        "prettier",
+        "prettierd",
+        -- "flake8",
       },
     },
   },

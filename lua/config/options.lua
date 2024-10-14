@@ -19,14 +19,16 @@ vim.g.mapleader = "\\"
 -- this should normally be set dynamically with \uw
 -- note that this is soft wrapping, the underlying file doesn't change, but it
 -- let's you see long lines
-vim.opt.wrap = true
-
 -- http://blog.ezyang.com/2010/03/vim-textwidth/
--- this is not documented, if you do not set them vim.g.wrap does not work
--- https://www.lazyvim.org/configuration/general#options in default
--- sets vim.opt.local.wrap = true, and vim.opt_local.spell = true but not...
--- textwidth 88 is black and textwidth 80 is markdown-cli2
-vim.opt.textwidth = 80
+-- https://stackoverflow.com/questions/36950231/auto-wrap-lines-in-vim-without-inserting-newlines
+-- there are two kinds of wrapping. Soft wrapping which is visual only and
+-- changes as you can the window of the terminal display
+-- hard wrapping which adds an actual newline
+-- wrapmargin sets where if you type, it will insert an EOL for you.
+vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.wrapmargin = 88
+vim.opt.textwidth = 88
 
 -- https://github.com/LazyVim/LazyVim/discussions/141
 -- set in
@@ -34,5 +36,8 @@ vim.opt.textwidth = 80
 -- override her
 -- vim.g.autoformat = false
 
--- MarkDown Preview trying to get it to start firefox does not work
-vim.g.mkdp_browser = "firefox"
+-- MarkDown Preview and this does work to use firefox
+-- vim.g.mkdp_browser = "firefox"
+
+-- https://www.lazyvim.org/extras/formatting/prettier
+-- vim.g.lazyvim_prettier_needs_config = false
