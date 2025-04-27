@@ -1,7 +1,6 @@
 # Rich's Nvim
 
 <!-- https://github.com/LazyVim/LazyVim/discussions/4094 -->
-
 <!-- hack until we get conform's pretiier to work with markdownlint-cli2 -->
 <!--markdownlint-configure-file { "MD013": { "line_length": 88} } -->
 
@@ -12,46 +11,49 @@ just get the LazyVim Starter working
 
 ## Current problems
 
-- [ ] It looks like you can use the \_leader_cf to run the conform
-      formatters, but none are set by default, so what is happening is that the
-      linter is running markdownlint-cli2 which makes sense, what I need to do is
-      to configure the conform which is really unclear that
+- [ ] It looks like you can use the \_leader_cf to run the conform formatters,
+      but none are set by default, so what is happening is that the linter is running
+      markdownlint-cli2 which makes sense, what I need to do is to configure the
+      conform which is really unclear that
       [conform](https://github.com/LazyVim/LazyVim/discussions/3144). does nothing
       without configuration. I tried to use the fancy prittier picks up everything but
       that didn't quite work. I sent a bug report to them. I think there's a problem
-      with the script. Overall the idea of \cf being the super formatter is great, but there
-      is a bunch of work you have to do. Also I need to see how prettteer and
-      markdownlint-cli2 get along
-- [ ] Code companion is [cool](https://github.com/olimorris/codecompanion.nvim) but
-      still trying to get mini.diff to work correctly and that is frustrating
+      with the script. Overall the idea of \cf being the super formatter is great, but
+      there is a bunch of work you have to do. Also I need to see how prettteer and
+      markdownlint-cli2 get along, but the main thing is that you apparently
+      have to hack in yet another configuration file for cli2 to work this way. Sigh.
+      I think I'll still to the 80 textwidth for now.
+- [ ] Code companion is
+      [cool](https://github.com/olimorris/codecompanion.nvim) but still trying to
+      get mini.diff to work correctly and that is frustrating
 
 ## Resolved Problems but good documentation
 
 - [x] Formatting in base neovim. There are three kinds of wrapping: 1) Soft
-      wrapping which is visual only and changes as you can the window of the
-      terminal display, you use `vim.opt.wrap=true` to turn it on , 2) hard
-      wrapping which adds an actual newline that can happen when you are typing and
-      and it will type a newline or EOL for you set `vim.opt.wrapmargin=88` to set
-      this, but note that this only works when adding text not when editing and 3)
-      automatic hard wrapping where a command goes through and fixes and adds EOL
-      or newlines you set `vim.opt.textwidth=88` to do this and you can force it
-      with gww, but autoformat is off in options.lua put in vim.g.autoformat (g
-      means global). is different from hard wrapping which you run with
-      gww*motion*. [Soft
+      wrapping which is visual only and changes as you can the window of the terminal
+      display, you use `vim.opt.wrap=true` to turn it on , 2) hard wrapping which adds
+      an actual newline that can happen when you are typing and and it will type a
+      newline or EOL for you set `vim.opt.wrapmargin=88` to set this, but note that
+      this only works when adding text not when editing and 3) automatic hard wrapping
+      where a command goes through and fixes and adds EOL or newlines you set
+      `vim.opt.textwidth=88` to do this and you can force it with gww, but autoformat
+      is off in options.lua put in vim.g.autoformat (g means global). is different
+      from hard wrapping which you run with gww*motion*. [Soft
       wrapping](https://github.com/LazyVim/LazyVim/discussions/1959) is explained
-      here. The confusing thing is what is running `gw` as `:verbose map gw` has
-      this just tied to which_key (the key map is very
+      here. The confusing thing is what is running `gw` as `:verbose map gw` has this
+      just tied to which_key (the key map is very
       [handy](https://www.reddit.com/r/neovim/comments/1bbuxh2/lazyvim_default_keymaps/)
       as is the LazyVim
       [default](https://www.lazyvim.org/configuration/general#keymaps). The second
-      thing to understand is that you can use the native vim formatting commands
-      which are `gw` and `gq` these run the internal formatter which looks at
-      textwidth to do the work. The different is that gw formats and leaves you at
-      the top. But gq formats and leaves at the bottom so you can do this
-      repetitively. The solution right now is you have to put a hack into the file
-      `<!--markdownlint-configure-file { "MD013": { "line_length": 88} } -->` which
-      not super bad but painful. The right solution is to fix \cf so that it works
-      properly. Usually just doing a `se tw=77` solves this problem.
+      thing to understand is that you can use the native vim formatting commands which
+      are `gw` and `gq` these run the internal formatter which looks at textwidth to
+      do the work. The different is that gw formats and leaves you at the top. But gq
+      formats and leaves at the bottom so you can do this repetitively. Note that
+      LazyVim disables `gq` so you only have `gw` available. The solution right now is
+      you have to put a hack into the file `<!--markdownlint-configure-file { "MD013":
+{ "line_length": 88} } -->` which not super bad but painful. The right solution
+      is to fix \cf so that it works properly. Usually just doing a `se tw=80` solves
+      this problem even though I like 88, it is not worth it to fix.
 
 - [x] MarkdownPreview gives an error message. This is because lazy loading was
       not implemented should be fixed in next release of lazyvim, but this not clear
@@ -59,31 +61,30 @@ just get the LazyVim Starter working
 - [x] shell script using bashls but also need shellcheck for linting and shfmt
       for linting which Mason installs Bashls discovers these.
       [bashls](https://github.com/bash-lsp/bash-language-server)
-- [ ] The problem is that conform will also do format checking and you can
-      get this conflict specfically, Markdownlint-cli2 wants to see text wrapped at
-      80, but I like 88 as this gives a little more space. The gcw commands also
-      are at [gq vs.
-      gw](https://aijaz.net/2011/12/07/how-to-wrap-text-in-vim/index.html). The
-      main issue that because of how word breaks are handled, you can still get
-      more than textwidth characters. As an aside, if you want the formatting done
-      by Conform using the actual deep formatting programs. The nice ones looks
-      like prettier which needs a bunch of configuration [mason, conform, and
-      none-ls](https://www.lazyvim.org/extras/formatting/prettier) need
-      configurations to use it
+- [ ] The problem is that conform will also do format checking and you can get
+      this conflict specfically, Markdownlint-cli2 wants to see text wrapped at 80,
+      but I like 88 as this gives a little more space. The gcw commands also are at
+      [gq vs. gw](https://aijaz.net/2011/12/07/how-to-wrap-text-in-vim/index.html).
+      The main issue that because of how word breaks are handled, you can still get
+      more than textwidth characters. As an aside, if you want the formatting done by
+      Conform using the actual deep formatting programs. The nice ones looks like
+      prettier which needs a bunch of configuration [mason, conform, and
+      none-ls](https://www.lazyvim.org/extras/formatting/prettier) need configurations
+      to use it
 - [x] Ruff vs pyright for python to get completions, pydocstyles force and
-      black or just use pyright. Ruff with the right setting emulates all
-      pydocstyles by enable the 'E' for pycodestyle, 'F' for pyright, 'I' for
-      isort. Leaving pyright on for right now.
+      black or just use pyright. Ruff with the right setting emulates all pydocstyles
+      by enable the 'E' for pycodestyle, 'F' for pyright, 'I' for isort. Leaving
+      pyright on for right now.
 - [x] Spell checking can be done with the base spelling and ]s, [s, z= and zg
       or or you can use ltex for more advanced stuff and is way busier
-- [x] Font does not show correct glyphs looks like this is the lsp. Need to
-      brew install the font and then make sure that iterm2 profile uses it in
-      `iTerm2 | Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270
-      Nerd Font You should load nerd fonts as these have all the glyphs you need.
-      The Usable fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
-- [x] Automatic word wrapping is \uw or in options.lua put in
-      vim.opt.wrap=true this is set but doesn't seem to work but gw is the old gcc,
-      so gw} word wraps to the next empty space
+- [x] Font does not show correct glyphs looks like this is the lsp. Need to brew
+      install the font and then make sure that iterm2 profile uses it in `iTerm2 |
+Settings | Profiles | _Your Profile_ | Text | Font`. Note that 3270 Nerd Font
+      You should load nerd fonts as these have all the glyphs you need. The Usable
+      fonts are Fira Code, Hack, Ubuntu and JetBrains Mono
+- [x] Automatic word wrapping is \uw or in options.lua put in vim.opt.wrap=true
+      this is set but doesn't seem to work but gw is the old gcc, so gw} word wraps to
+      the next empty space
 - [x] Change vim.g.mapleader = "\\" in ./lua/config/options.lua
 - [x] Change to solarized, edit ./lua/plugins/base.lua add the .nvim file,
       options does not want the .nvim suffix
@@ -92,41 +93,40 @@ just get the LazyVim Starter working
 
 ## Finding files with neotree and telescope
 
-Ok, we are way past `:e` and automatic finding, there are two totally
-different ways to find things,
-[Neotree](https://github.com/nvim-neo-tree/neo-tree.nvim) starts with \e or
-\E and you have a pane on the left with bunch of unknown commands, you can
-look these up or use `:help neo-tree-mappings` to figure them out.
+Ok, we are way past `:e` and automatic finding, there are two totally different
+ways to find things, [Neotree](https://github.com/nvim-neo-tree/neo-tree.nvim)
+starts with \e or \E and you have a pane on the left with bunch of unknown
+commands, you can look these up or use `:help neo-tree-mappings` to figure them
+out.
 
 Some of the important commands are:
 
-- `.` sets the root to the current folder. Note that if you go to the root
-  and press `Backspace` it will move up to the parent and set that as the top
-  of Neo-tree
+- `.` sets the root to the current folder. Note that if you go to the root and
+  press `Backspace` it will move up to the parent and set that as the top of
+  Neo-tree
 - `/` will do a fuzzy search across the whole file tree
 - `H` will show you hidden files
 - `o` will reorder the tree
 - `gA` does a git add!, `gc` does a git commit, `gp` does a git push
-- Note that you can move to different windows (they call panes windows) with
-  the `Ctrl-w` and you can add a modifier like hjkl to move in different
-  windows or q to close a window. and CTRL-w twice switched to the last window.
+- Note that you can move to different windows (they call panes windows) with the
+  `Ctrl-w` and you can add a modifier like hjkl to move in different windows or q
+  to close a window. and CTRL-w twice switched to the last window.
 
 Telescope is a completely different interface with a modal dialog box you get
-with `\f` so you can get to neo-tree with `\fe` but \f gives you fuzzy
-finding quickly vs lots of browsing with neo-tree.
+with `\f` so you can get to neo-tree with `\fe` but \f gives you fuzzy finding
+quickly vs lots of browsing with neo-tree.
 
-This gives you a preview of the file and you can do things like `CTRL-f` to
-move the preview forward and to move in the windows you need `CTRL-j` as
-movements since typing regular characters does the fuzzy find.
+This gives you a preview of the file and you can do things like `CTRL-f` to move
+the preview forward and to move in the windows you need `CTRL-j` as movements
+since typing regular characters does the fuzzy find.
 
 TElescope also works in text, so `gd` means to to definition in text
 
 ## 💤 LazyVim Starter
 
-A starter template for [LazyVim](https://github.com/LazyVim/LazyVim). Refer
-to the [documentation](https://lazyvim.github.io/installation) to get
-started. This is forked at
-[nvim.lazyvim](https://github.com/richtong/nvim.lazyvim)
+A starter template for [LazyVim](https://github.com/LazyVim/LazyVim). Refer to
+the [documentation](https://lazyvim.github.io/installation) to get started. This
+is forked at [nvim.lazyvim](https://github.com/richtong/nvim.lazyvim)
 
 ## Decomposing the LazyVim Starter
 
@@ -136,8 +136,8 @@ This uses Lazy.nvim to install components
 - [Gruvbox](ellisonleao/gruvbox.nvim) - Theme
 - [Trouble](https://github.com/folke/trouble.nvim) - pretty list for all the
   trouble in your code
-- [Nvim-lualine](https://github.com/nvim-lualine/lualine.nvim) - Like
-  airline, this is for status
+- [Nvim-lualine](https://github.com/nvim-lualine/lualine.nvim) - Like airline,
+  this is for status
 
 Major components for an IDE so Mason > Nvim-lspconfig, nvim-telescope,
 nvim-treesitter
@@ -148,33 +148,31 @@ nvim-treesitter
   days CoC grew into this by adding an LSP plugin system since code completion,
   linting and formatting are highly related.
 - [Nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - configuration
-  helper for the native Language Server Protocol. It adds some standard
-  keystrokes like \-] to goto definition and C-X, C-O to do manual completion.
-  YOu need an autocompletion plugin to do this automatically. [d and ]d is go
-  to previous and next. Use `:LspInfo` to control it. With opts.servers, you
-  can add things like pyright or typescript etc. LSPs provide syntax, they
-  provide linting and other things.
-- [Nvim-telescope](https://github.com/nvim-telescope/telescope.nvim) - A
-  fuzzy finder like fzf and has modular components and can use fzf underneath.
-  \fp finds telescope plugins, but not that if you install fzf in LazyExtras,
-  you get a conflict with telescope, so only install telescope, it seems fine
-  and fast.
-- [Nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) -
-  much smarter highlighting as it understands the abstract symbol tree for code
-  and so coloring works well.
+  helper for the native Language Server Protocol. It adds some standard keystrokes
+  like \-] to goto definition and C-X, C-O to do manual completion. YOu need an
+  autocompletion plugin to do this automatically. [d and ]d is go to previous and
+  next. Use `:LspInfo` to control it. With opts.servers, you can add things like
+  pyright or typescript etc. LSPs provide syntax, they provide linting and other
+  things.
+- [Nvim-telescope](https://github.com/nvim-telescope/telescope.nvim) - A fuzzy
+  finder like fzf and has modular components and can use fzf underneath. \fp finds
+  telescope plugins, but not that if you install fzf in LazyExtras, you get a
+  conflict with telescope, so only install telescope, it seems fine and fast.
+- [Nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - much
+  smarter highlighting as it understands the abstract symbol tree for code and so
+  coloring works well.
 
 Note sure why this is needed above what mason adds
 
-- [Nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Code completion manager
-  can use LSPs, needs a snippet engine like vsnip, luasnip, ultisnips or snippy
-  and use [cmp-emoji](https://github.com/hrsh7th/cmp-emoji) to add Emoji
-  completions. Source downstream components. This is like CoC in the vim days.
+- [Nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Code completion manager can
+  use LSPs, needs a snippet engine like vsnip, luasnip, ultisnips or snippy and
+  use [cmp-emoji](https://github.com/hrsh7th/cmp-emoji) to add Emoji completions.
+  Source downstream components. This is like CoC in the vim days.
 
 Here are some optional things that are not in LazyVim
 
 - [nvim-lint](https://github.com/mfussenegger/nvim-lint) to add dedicated
-  linters if the ones in LSPs aren't good enough. This is alot like ALE in the
-  old vim days.
+  linters if the ones in LSPs aren't good enough. This is alot like ALE in the old vim days.
 - [formatter.nvim](https://github.com/mhartington/formatter.nvim) - not sure
   whey this is needed with both treesitter and nvim-lspconfig
 - [nvim-dap](https://github.com/mfussenegger/nvim-dap) - Set breakpoints with

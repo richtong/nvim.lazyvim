@@ -27,8 +27,9 @@ vim.g.mapleader = "\\"
 -- wrapmargin sets where if you type, it will insert an EOL for you.
 vim.opt.wrap = true
 vim.opt.linebreak = true
-vim.opt.wrapmargin = 88
-vim.opt.textwidth = 88
+-- really like 88 but markdownlint-cli2 annoyingly doesn't like it
+vim.opt.wrapmargin = 80
+vim.opt.textwidth = 80
 
 -- https://github.com/LazyVim/LazyVim/discussions/141
 -- set in
